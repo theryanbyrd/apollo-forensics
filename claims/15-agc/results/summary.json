@@ -1,0 +1,7 @@
+{
+  "claim": 15,
+  "title": "1960s computers too weak",
+  "verdict": "REFUTED",
+  "headline": "The real Apollo 11 LM flight code (Luminary 099) reassembled from its 1969 listing to a bit-identical binary (SHA-256 match, 36/36 bank checksums over all 36,864 words) and ran on a cycle-accurate AGC emulator at 84,396-84,703 of 85,333 authentic cycles/sec (99% real time) while using 3-5% of one laptop core and ~1 MB of RAM.",
+  "impressive": "We didn't argue about the computer -- we ran it. The exact bits that landed Eagle (verified byte-for-byte against an independent transcription of the flown rope's octal listing) booted on period-accurate emulated hardware and immediately did what the real LGC did on the pad: 10 Hz autopilot housekeeping, DSKY relay writes, and the 2-second telemetry downlist at ~50 words/sec -- 8,289 live i/o-channel writes captured per 60 seconds, with an identical profile across three runs (fully deterministic). Bonus: the infamous 1201/1202 landing alarms are right there in the source we assembled ('TC BAILOUT1 / OCT 1201 # NO VAC AREAS.', EXECUTIVE.agc lines 149-152 and 210-213) -- a priority-scheduling OS shedding low-priority jobs under overload: sophistication, not weakness. The whole flight program is 67.5 KB, smaller than the 103 KB PNG chart we made about it."
+}

@@ -1,0 +1,52 @@
+Apollo Guidance Computer (AGC) assembler, version 2026-08-07-local, built Aug  7 2026, target AGC4
+(c)2026 Ronald S. Burkey
+Refer to https://www.ibiblio.org/apollo/index.html for more information.
+Pass #1
+Pass #2
+Pass #3
+
+[... ~66,500 lines of assembly listing + symbol table trimmed; full log: data/yaYUL-full.log ...]
+
+
+Unresolved symbols:  0
+Fatal errors:  0
+Warnings:  1
+Multiply-defined symbols:  0
+
+Bank checksum ("bugger") words computed by yaYUL, one per fixed bank (36 banks):
+Bugger word 67044 at 02,3777.
+Bugger word 61751 at 03,3760.
+Bugger word 77716 at 00,3776.
+Bugger word 55151 at 01,3777.
+Bugger word 12532 at 04,3773.
+Bugger word 44531 at 05,3774.
+Bugger word 44057 at 06,3766.
+Bugger word 66702 at 07,3775.
+Bugger word 56105 at 10,3777.
+Bugger word 43373 at 11,3777.
+Bugger word 73411 at 12,3777.
+Bugger word 21126 at 13,3771.
+Bugger word 56616 at 14,3776.
+Bugger word 47112 at 15,3777.
+Bugger word 10415 at 16,3774.
+Bugger word 64555 at 17,3746.
+Bugger word 41116 at 20,3774.
+Bugger word 67517 at 21,3772.
+Bugger word 00471 at 22,3775.
+Bugger word 57135 at 23,3771.
+Bugger word 76466 at 24,3777.
+Bugger word 10540 at 25,3772.
+Bugger word 73435 at 26,3777.
+Bugger word 45310 at 27,3774.
+Bugger word 71361 at 30,3777.
+Bugger word 53641 at 31,3763.
+Bugger word 71663 at 32,3775.
+Bugger word 07450 at 33,3777.
+Bugger word 60264 at 34,3777.
+Bugger word 44737 at 35,3777.
+Bugger word 53320 at 36,3767.
+Bugger word 47535 at 37,3776.
+Bugger word 70762 at 40,3715.
+Bugger word 72012 at 41,3733.
+Bugger word 56666 at 42,3774.
+Bugger word 67233 at 43,3754.
