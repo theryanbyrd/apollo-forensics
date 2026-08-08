@@ -62,3 +62,5 @@ Everything is public and reproducible:
 The moon landing survived code review. Approved. Merging to history.
 
 So, what should I put through review next? JFK? Area 51? Whether dinosaurs are real? Drop your favorite conspiracy below. If it can be tested in software, it can be tested in a weekend.
+
+p.s. this walkthrough of the Apollo 11 guidance computer is worth an hour of your time: https://www.youtube.com/watch?v=B1J2RMorJXM
