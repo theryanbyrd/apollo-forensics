@@ -13,7 +13,7 @@ A test that can't fail isn't a test. Every experiment here could, in principle, 
 | [1](claims/01-shadows/) | Non-parallel shadows = studio lights | Geometric light-source fit + JPL ephemeris cross-check | ⏳ |
 | [2](claims/02-fill-light/) | Astronauts visible in shadow = fill lamps | Hapke-BRDF radiometry of regolith bounce light | ✅ **REFUTED** — regolith bounce predicts the shadowed suit at 40% of sunlit ground [22–72%]; the photo measures 26%. Slightly *less* light than physics supplies — the opposite of a lamp |
 | [4](claims/04-backdrop-parallax/) | Identical backgrounds = painted backdrop | Feature-match parallax between camera stations | ⏳ |
-| [6](claims/06-photo-quality/) | Photos too good for chest cameras | Quality-score the whole archive, not the famous 50 | ⏳ |
+| [6](claims/06-photo-quality/) | Photos too good for chest cameras | Quality-score the whole archive, not the famous 50 | ✅ **REFUTED** — 687 consecutive frames: 7.1% outright duds, 20% of horizons tilted >10°; the icons are just the curated top of a wide human distribution (Aldrin portrait: raw tilt −15.4°, 50th percentile overall) |
 | [7](claims/07-c-rock/) | The "C" prop rock | Generational film forensics on AS16-107-17446 | ⏳ |
 | [9](claims/09-gravity/) | Slowed-down Earth footage | Ballistics + biomechanics g-fit from EVA film | ⏳ |
 | [10](claims/10-wire-rigs/) | Astronauts on wires | Acceleration-profile analysis of jumps and falls | ✅ **REFUTED** — both jump-salute jumps fit free ballistic flight at g = 1.68–1.69 ± 0.11 m/s² with ~2 mm residuals; no tension events, no wires down to 0.16 mm |

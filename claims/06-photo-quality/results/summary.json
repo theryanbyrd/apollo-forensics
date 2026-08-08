@@ -1,0 +1,91 @@
+{
+  "claim": 6,
+  "title": "Photos too good for chest cameras",
+  "verdict": "REFUTED - survivorship bias: the archive has a thick tail of genuinely bad frames; the famous photos are the curated top of a wide, human distribution",
+  "headline": "687 consecutive frames from 5 complete Apollo surface magazines scored: 7.1% are outright duds (black, washed-out, blurred or aimless) and 19.9% of detectable horizons are tilted >10 deg, yet 0 of 9 iconic frames is a dud (median composite percentile 50) - and even the Aldrin portrait's raw horizon is tilted ~15 deg, fixed only by publication cropping.",
+  "impressive": "results/montage_worst.png - 48 genuine NASA outtakes (black frames, lens flare, blurry regolith, aimless sky) with frame IDs",
+  "stats": {
+    "n_scored": 687,
+    "n_icons_in_sample": 9,
+    "n_icon_duds": 0,
+    "pct_black_frame": 0.9,
+    "pct_underexposed": 2.5,
+    "pct_overexposed": 2.0,
+    "pct_blurry": 3.6,
+    "pct_aimless": 0.9,
+    "pct_dud": 7.1,
+    "pct_crooked_horizon_gt10deg": 19.9,
+    "median_abs_tilt_deg": 3.3,
+    "icons": {
+      "AS11-40-5850": {
+        "quality_pctile_overall": 37.4,
+        "content_sharpness_pctile_in_magazine": 44.9,
+        "tilt_deg": -13.8,
+        "is_dud": 0
+      },
+      "AS11-40-5875": {
+        "quality_pctile_overall": 43.4,
+        "content_sharpness_pctile_in_magazine": 54.3,
+        "tilt_deg": 9.7,
+        "is_dud": 0
+      },
+      "AS11-40-5877": {
+        "quality_pctile_overall": 74.7,
+        "content_sharpness_pctile_in_magazine": 88.2,
+        "tilt_deg": 0.0,
+        "is_dud": 0
+      },
+      "AS11-40-5878": {
+        "quality_pctile_overall": 68.9,
+        "content_sharpness_pctile_in_magazine": 83.5,
+        "tilt_deg": 5.0,
+        "is_dud": 0
+      },
+      "AS11-40-5903": {
+        "quality_pctile_overall": 31.3,
+        "content_sharpness_pctile_in_magazine": 32.3,
+        "tilt_deg": -15.4,
+        "is_dud": 0
+      },
+      "AS12-48-7133": {
+        "quality_pctile_overall": 50.5,
+        "content_sharpness_pctile_in_magazine": 29.3,
+        "tilt_deg": 0.0,
+        "is_dud": 0
+      },
+      "AS12-49-7278": {
+        "quality_pctile_overall": 14.1,
+        "content_sharpness_pctile_in_magazine": 13.7,
+        "tilt_deg": 0.0,
+        "is_dud": 0
+      },
+      "AS16-113-18339": {
+        "quality_pctile_overall": 82.7,
+        "content_sharpness_pctile_in_magazine": 82.4,
+        "tilt_deg": -7.2,
+        "is_dud": 0
+      },
+      "AS17-134-20384": {
+        "quality_pctile_overall": 68.1,
+        "content_sharpness_pctile_in_magazine": 76.8,
+        "tilt_deg": null,
+        "is_dud": 0
+      }
+    },
+    "median_icon_quality_percentile": 50.5,
+    "dud_rate_by_magazine": {
+      "AS11-40": 2.4,
+      "AS12-48": 3.3,
+      "AS12-49": 5.9,
+      "AS16-113": 11.8,
+      "AS17-134": 12.9
+    },
+    "magazines": {
+      "AS11-40": 127,
+      "AS12-48": 150,
+      "AS12-49": 153,
+      "AS16-113": 102,
+      "AS17-134": 155
+    }
+  }
+}
