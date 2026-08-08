@@ -1,0 +1,690 @@
+{
+  "claim": 17,
+  "title": "400,000 people can't keep a secret",
+  "verdict": "SUPPORTS THE LANDINGS. Reproducing Grimes (2016) (19/19 published numbers matched within 1%), a 411,000-person hoax has an expected time-to-exposure of ~1.2 years and P(silence to 2026) ~ 7e-21 even at his deliberately ultra-conservative leak rate. The maximum core that survives 57 years with >50% probability is ~49 people at the FBI-calibrated leak rate (~2,991 even at the ultra-conservative rate), while fabricating the independently-verified evidence needs >=~874 witting participants under heroic assumptions - and one requirement (terrain matching data not measured until 2008-09) cannot be met at ANY staff size. Adding mortality, deathbed confessions, FOIA-era documents and the Soviet tracking incentive closes the last conservative corner: no simulated 1,000+ core stayed silent to 2026.",
+  "headline": "Expected exposure of a 411,000-person hoax: ~1.2 years; max 57-year-silent core: ~49 (calibrated) to ~2,991 (ultra-conservative) people; faking the evidence needs >=~874 and realistically tens of thousands - the hoax is pincered from both sides.",
+  "impressive": "results/fig2_heatmap_frontier.png - the (N, p) survival heatmap with the three real exposed-conspiracy calibration points and the Apollo point 5+ orders of magnitude outside the survivable region; runner-up: the ABM shows 'the conspirators would all be dead by now' BACKFIRES - deaths become deathbed-confession opportunities.",
+  "model": {
+    "source": "Grimes DR (2016) PLOS ONE 11(1):e0147905; correction 11(3):e0151003 (non-homogeneous Poisson form)",
+    "equation": "L(t) = 1 - exp(-int_0^t [1-(1-p)^N(t')] dt')",
+    "calibration": {
+      "NSA_PRISM": {
+        "N": 30000,
+        "t_yr": 6,
+        "p": 4.092008262877067e-06
+      },
+      "Tuskegee": {
+        "N": 6700,
+        "t_yr": 25,
+        "p": 4.196633768483285e-06
+      },
+      "FBI_forensics": {
+        "N": 500,
+        "t_yr": 6,
+        "p": 0.0002454908602962258
+      }
+    }
+  },
+  "validation": [
+    {
+      "check": "PRISM p (N=30,000, t=6yr)",
+      "ours": 4.092008262877067e-06,
+      "paper": 4.09e-06,
+      "deviation_pct": 0.049,
+      "ok": true
+    },
+    {
+      "check": "Tuskegee p (N=6,700, t=25yr)",
+      "ours": 4.196633768483285e-06,
+      "paper": 4.2e-06,
+      "deviation_pct": 0.08,
+      "ok": true
+    },
+    {
+      "check": "FBI forensics p (N=500, t=6yr)",
+      "ours": 0.0002454908602962258,
+      "paper": 0.000245,
+      "deviation_pct": 0.2,
+      "ok": true
+    },
+    {
+      "check": "Moon hoax, constant N=411,000",
+      "ours": 3.6811151093120746,
+      "paper": 3.68,
+      "deviation_pct": 0.03,
+      "ok": true
+    },
+    {
+      "check": "Climate fraud incl. bodies N=405,000",
+      "ours": 3.702157752666333,
+      "paper": 3.7,
+      "deviation_pct": 0.058,
+      "ok": true
+    },
+    {
+      "check": "Climate fraud scientists-only N=29,083",
+      "ours": 26.71241760917612,
+      "paper": 26.77,
+      "deviation_pct": 0.215,
+      "ok": true
+    },
+    {
+      "check": "Vaccination CDC/WHO N=22,000",
+      "ours": 34.81357073094137,
+      "paper": 34.78,
+      "deviation_pct": 0.097,
+      "ok": true
+    },
+    {
+      "check": "Vaccination + pharma N=736,066",
+      "ours": 3.150968671450699,
+      "paper": 3.15,
+      "deviation_pct": 0.031,
+      "ok": true
+    },
+    {
+      "check": "Cancer cure N=714,066",
+      "ours": 3.1664173394256916,
+      "paper": 3.17,
+      "deviation_pct": 0.113,
+      "ok": true
+    },
+    {
+      "check": "Moon hoax, Gompertz single event (t_e=40)",
+      "ours": 3.7398958829871,
+      "paper": 3.68,
+      "deviation_pct": 1.628,
+      "ok": false,
+      "note": "Paper's Table 3 predates its own published correction (e0151003, non-homogeneous Poisson form used here); the paper itself notes the Gompertz curve is 'non-resolvable visually' from the constant-N 3.68 yr"
+    },
+    {
+      "check": "N_max(5 yr)",
+      "ours": 2521.178605621898,
+      "paper": 2531,
+      "deviation_pct": 0.388,
+      "ok": true,
+      "note": "Paper internally inconsistent at t=5: its text says 2521, its Table 4 says 2531; our value reproduces the text's 2521"
+    },
+    {
+      "check": "N_max(10 yr)",
+      "ours": 1257.3396309394027,
+      "paper": 1257,
+      "deviation_pct": 0.027,
+      "ok": true
+    },
+    {
+      "check": "N_max(15 yr)",
+      "ours": 837.5075766164387,
+      "paper": 838,
+      "deviation_pct": 0.059,
+      "ok": true
+    },
+    {
+      "check": "N_max(20 yr)",
+      "ours": 627.8615780755243,
+      "paper": 628,
+      "deviation_pct": 0.022,
+      "ok": true
+    },
+    {
+      "check": "N_max(25 yr)",
+      "ours": 502.1602103830092,
+      "paper": 502,
+      "deviation_pct": 0.032,
+      "ok": true
+    },
+    {
+      "check": "N_max(30 yr)",
+      "ours": 418.39518731666726,
+      "paper": 418,
+      "deviation_pct": 0.095,
+      "ok": true
+    },
+    {
+      "check": "N_max(40 yr)",
+      "ours": 313.72924873606297,
+      "paper": 313,
+      "deviation_pct": 0.233,
+      "ok": true
+    },
+    {
+      "check": "N_max(50 yr)",
+      "ours": 250.95118565721188,
+      "paper": 251,
+      "deviation_pct": 0.019,
+      "ok": true
+    },
+    {
+      "check": "N_max(100 yr)",
+      "ours": 125.44339602978754,
+      "paper": 125,
+      "deviation_pct": 0.355,
+      "ok": true
+    },
+    {
+      "check": "Gompertz N0 with L(10yr)=0.05",
+      "ours": 1327.4857258796692,
+      "paper": 1328,
+      "deviation_pct": 0.039,
+      "ok": true
+    },
+    {
+      "check": "Gompertz max L",
+      "ours": 0.37844671225234905,
+      "paper": 0.38,
+      "deviation_pct": 0.409,
+      "ok": true
+    },
+    {
+      "check": "Gompertz argmax t (yr)",
+      "ours": 28.886000000000003,
+      "paper": 29,
+      "deviation_pct": 0.393,
+      "ok": true
+    },
+    {
+      "check": "Exponential-removal max L",
+      "ours": 0.12372726723800077,
+      "paper": 0.12,
+      "deviation_pct": 3.106,
+      "ok": true
+    },
+    {
+      "check": "Exponential-removal argmax t (yr)",
+      "ours": 14.493,
+      "paper": 14,
+      "deviation_pct": 3.521,
+      "ok": true
+    }
+  ],
+  "apollo_variants": {
+    "program_411k|p_cons_4.09e-6": {
+      "N": 411000,
+      "p": 4.09e-06,
+      "phi_per_year": 0.8138110829448719,
+      "expected_time_to_exposure_yr": 1.228786411191872,
+      "median_time_to_exposure_yr": 0.8517298364280197,
+      "P_survive_57yr": 7.149591520094768e-21,
+      "t_L95_yr": 3.6811151093120746
+    },
+    "program_411k|p_fbi_2.45e-4": {
+      "N": 411000,
+      "p": 0.000245,
+      "phi_per_year": 1.0,
+      "expected_time_to_exposure_yr": 1.0,
+      "median_time_to_exposure_yr": 0.6931471805599453,
+      "P_survive_57yr": 1.7587922024243116e-25,
+      "t_L95_yr": 2.99573227355399
+    },
+    "nasa_only_30k|p_cons_4.09e-6": {
+      "N": 30000,
+      "p": 4.09e-06,
+      "phi_per_year": 0.11547124049248274,
+      "expected_time_to_exposure_yr": 8.660165039667177,
+      "median_time_to_exposure_yr": 6.002768980429111,
+      "P_survive_57yr": 0.0013852693134914112,
+      "t_L95_yr": 25.943535903634935
+    },
+    "nasa_only_30k|p_fbi_2.45e-4": {
+      "N": 30000,
+      "p": 0.000245,
+      "phi_per_year": 0.9993579860477849,
+      "expected_time_to_exposure_yr": 1.0006424263989264,
+      "median_time_to_exposure_yr": 0.6935924766070785,
+      "P_survive_57yr": 1.8243470097433961e-25,
+      "t_L95_yr": 2.997656811050637
+    },
+    "gompertz_411k_te40|p_cons_4.09e-6": {
+      "N": 411000,
+      "p": 4.09e-06,
+      "P_survive_57yr": 1.6623914014471996e-14
+    },
+    "gompertz_411k_te40|p_fbi_2.45e-4": {
+      "N": 411000,
+      "p": 0.000245,
+      "P_survive_57yr": 2.9183760872200064e-25
+    }
+  },
+  "expected_time_to_exposure_411k_cons_yr": 1.228786411191872,
+  "frontier_57yr": {
+    "p_cons_4.09e-6": {
+      "N_max_50pct": 2991,
+      "N_max_5pct": 13200
+    },
+    "p_tuskegee_4.20e-6": {
+      "N_max_50pct": 2913,
+      "N_max_5pct": 12854
+    },
+    "p_fbi_2.45e-4": {
+      "N_max_50pct": 49,
+      "N_max_5pct": 220
+    }
+  },
+  "pincer": {
+    "N_fake_min_heroic": 874,
+    "N_fake_realistic": 30000,
+    "N_fake_grimes": 411000,
+    "N_silent_max_50pct_fbi_p": 49,
+    "N_silent_max_5pct_fbi_p": 220,
+    "N_silent_max_50pct_cons_p": 2991,
+    "N_silent_max_5pct_cons_p": 13200,
+    "ratio_fakemin_over_Nmax50_fbi_p": 17.8,
+    "ratio_fakemin_over_Nmax50_cons_p": 0.29,
+    "P_survive_57yr_at_N_fake_min": {
+      "p_cons_4.09e-6": 0.8159580862614916,
+      "p_fbi_2.45e-4": 1.6897730110702708e-05
+    }
+  },
+  "fake_requirements": [
+    {
+      "item": "Crews: 12 moonwalkers + 12 CM pilots who flew to the Moon (plus backups, excluded here)",
+      "quantity": "24 people minimum",
+      "witting_min": 24,
+      "source": "NASA Apollo mission records"
+    },
+    {
+      "item": "Mission Control: MOCR flight controllers + staff-support rooms seeing 'live' telemetry, x4 shifts x9 crewed lunar missions",
+      "quantity": "hundreds per mission",
+      "witting_min": 200,
+      "source": "NASA JSC Mission Operations history"
+    },
+    {
+      "item": "Real-time telemetry/comms simulator: 8-day continuous synthetic S-band streams (voice, biomed, guidance) self-consistent with orbital mechanics and 2.6 s light delay",
+      "quantity": "full mission-sim team",
+      "witting_min": 100,
+      "source": "cf. claim 22: light-delay measured in mission audio"
+    },
+    {
+      "item": "Signal origin: Manned Space Flight Network stations (Goldstone, Honeysuckle Creek, Madrid, Parkes) plus independent receivers (Jodrell Bank UK; Bochum observatory FRG; radio amateurs) all recorded transmissions FROM THE MOON with correct Doppler and delay - so either a lunar relay spacecraft (witting program) or complicit station staff",
+      "quantity": "~200 minimum (relay route)",
+      "witting_min": 200,
+      "source": "Jodrell Bank Apollo 11/Luna 15 recordings (released 2009); Honeysuckle Creek/Parkes TV reception records"
+    },
+    {
+      "item": "Lunar samples: 382 kg / 2,196 samples from 6 sites, distributed since 1969 to independent PIs worldwide; anhydrous mineralogy, cosmic-ray exposure ages, solar-wind noble gases; later matched by Soviet robotic Luna 16/20/24 samples (~326 g) incl. the 1971 USSR-USA sample exchange",
+      "quantity": "382 kg fabricated geochemistry",
+      "witting_min": 100,
+      "source": "NASA Astromaterials curation; Luna programme results"
+    },
+    {
+      "item": "Surface film/TV: ~81 h of EVA footage across 6 landings showing vacuum ballistics (dust arcs, no air drag) and 1/6-g gait, beyond 1969 SFX capability, in real time",
+      "quantity": "~81 h footage + thousands of Hasselblad frames",
+      "witting_min": 100,
+      "source": "Apollo Lunar Surface Journal EVA timelines; cf. claims 9/10"
+    },
+    {
+      "item": "Terrain: photo backgrounds match cm-to-m-scale topography measured only by SELENE/Kaguya (2008) and LRO (2009+) - data that DID NOT EXIST in 1969; no staff size can fake knowledge of unmeasured terrain",
+      "quantity": "impossible at any N (charitably: best cartography team)",
+      "witting_min": 50,
+      "source": "JAXA Kaguya Apollo 15 terrain match (2008); LROC landing-site images (2009-2012); cf. claim 20"
+    },
+    {
+      "item": "57 years of document control: curating millions of pages of telemetry, transcripts and engineering records through FOIA (1974 amendments) and declassification without one fatal inconsistency",
+      "quantity": ">= 100 archivists/security",
+      "witting_min": 100,
+      "source": "NASA archives; FOIA history"
+    }
+  ],
+  "abm": {
+    "config": {
+      "age_mean": 35.0,
+      "age_sd": 8.0,
+      "age_lo": 21,
+      "age_hi": 65,
+      "q_deathbed": 0.01,
+      "p_doc": 1e-05,
+      "coldwar_mult": 2.0,
+      "q_soviet": 0.1,
+      "n_runs": 10000,
+      "seed": 17
+    },
+    "scenarios": [
+      {
+        "n_core": 50,
+        "p_base": 0.000245,
+        "soviet": false,
+        "p_survive_57": 0.2987,
+        "median_tte": 28.0,
+        "mean_tte_exposed": 19.533437901040923,
+        "q10_tte": 4.0,
+        "q90_tte": 57.0,
+        "channel_shares": {
+          "defection": 0.7001283330956795,
+          "deathbed": 0.28219021816626266,
+          "documents": 0.01768144873805789,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 50,
+        "p_base": 0.000245,
+        "soviet": true,
+        "p_survive_57": 0.0289,
+        "median_tte": 5.0,
+        "mean_tte_exposed": 6.629801256307281,
+        "q10_tte": 0.0,
+        "q90_tte": 17.0,
+        "channel_shares": {
+          "defection": 0.19349191638348265,
+          "deathbed": 0.03048089795077747,
+          "documents": 0.0023684481515806816,
+          "soviet": 0.7736587375141593
+        }
+      },
+      {
+        "n_core": 200,
+        "p_base": 0.000245,
+        "soviet": false,
+        "p_survive_57": 0.0086,
+        "median_tte": 6.0,
+        "mean_tte_exposed": 8.763465805931007,
+        "q10_tte": 0.0,
+        "q90_tte": 21.0,
+        "channel_shares": {
+          "defection": 0.87462174702441,
+          "deathbed": 0.11630018156142828,
+          "documents": 0.009078071414161792,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 200,
+        "p_base": 0.000245,
+        "soviet": true,
+        "p_survive_57": 0.001,
+        "median_tte": 3.0,
+        "mean_tte_exposed": 4.296396396396396,
+        "q10_tte": 0.0,
+        "q90_tte": 10.0,
+        "channel_shares": {
+          "defection": 0.49099099099099097,
+          "deathbed": 0.037037037037037035,
+          "documents": 0.0025025025025025025,
+          "soviet": 0.4694694694694695
+        }
+      },
+      {
+        "n_core": 1000,
+        "p_base": 0.000245,
+        "soviet": false,
+        "p_survive_57": 0.0,
+        "median_tte": 1.0,
+        "mean_tte_exposed": 1.4578,
+        "q10_tte": 0.0,
+        "q90_tte": 4.0,
+        "channel_shares": {
+          "defection": 0.9553,
+          "deathbed": 0.0441,
+          "documents": 0.0006,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 1000,
+        "p_base": 0.000245,
+        "soviet": true,
+        "p_survive_57": 0.0,
+        "median_tte": 1.0,
+        "mean_tte_exposed": 1.158,
+        "q10_tte": 0.0,
+        "q90_tte": 3.0,
+        "channel_shares": {
+          "defection": 0.8347,
+          "deathbed": 0.0388,
+          "documents": 0.0004,
+          "soviet": 0.1261
+        }
+      },
+      {
+        "n_core": 5000,
+        "p_base": 0.000245,
+        "soviet": false,
+        "p_survive_57": 0.0,
+        "median_tte": 0.0,
+        "mean_tte_exposed": 0.0838,
+        "q10_tte": 0.0,
+        "q90_tte": 0.0,
+        "channel_shares": {
+          "defection": 0.9903,
+          "deathbed": 0.0097,
+          "documents": 0.0,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 5000,
+        "p_base": 0.000245,
+        "soviet": true,
+        "p_survive_57": 0.0,
+        "median_tte": 0.0,
+        "mean_tte_exposed": 0.0769,
+        "q10_tte": 0.0,
+        "q90_tte": 0.0,
+        "channel_shares": {
+          "defection": 0.9839,
+          "deathbed": 0.0097,
+          "documents": 0.0,
+          "soviet": 0.0064
+        }
+      },
+      {
+        "n_core": 30000,
+        "p_base": 0.000245,
+        "soviet": false,
+        "p_survive_57": 0.0,
+        "median_tte": 0.0,
+        "mean_tte_exposed": 0.0,
+        "q10_tte": 0.0,
+        "q90_tte": 0.0,
+        "channel_shares": {
+          "defection": 1.0,
+          "deathbed": 0.0,
+          "documents": 0.0,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 30000,
+        "p_base": 0.000245,
+        "soviet": true,
+        "p_survive_57": 0.0,
+        "median_tte": 0.0,
+        "mean_tte_exposed": 0.0,
+        "q10_tte": 0.0,
+        "q90_tte": 0.0,
+        "channel_shares": {
+          "defection": 1.0,
+          "deathbed": 0.0,
+          "documents": 0.0,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 50,
+        "p_base": 4.09e-06,
+        "soviet": false,
+        "p_survive_57": 0.6114,
+        "median_tte": 57.0,
+        "mean_tte_exposed": 33.466289243437984,
+        "q10_tte": 24.0,
+        "q90_tte": 57.0,
+        "channel_shares": {
+          "defection": 0.03216675244467319,
+          "deathbed": 0.9207411219763253,
+          "documents": 0.04709212557900155,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 50,
+        "p_base": 4.09e-06,
+        "soviet": true,
+        "p_survive_57": 0.0561,
+        "median_tte": 6.0,
+        "mean_tte_exposed": 7.681428117385316,
+        "q10_tte": 0.0,
+        "q90_tte": 21.0,
+        "channel_shares": {
+          "defection": 0.0034961330649433205,
+          "deathbed": 0.05032312744994173,
+          "documents": 0.0030723593601017056,
+          "soviet": 0.9431083801250132
+        }
+      },
+      {
+        "n_core": 200,
+        "p_base": 4.09e-06,
+        "soviet": false,
+        "p_survive_57": 0.1464,
+        "median_tte": 31.0,
+        "mean_tte_exposed": 27.85508434864105,
+        "q10_tte": 10.0,
+        "q90_tte": 57.0,
+        "channel_shares": {
+          "defection": 0.04451733833177132,
+          "deathbed": 0.8939784442361762,
+          "documents": 0.061504217432052484,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 200,
+        "p_base": 4.09e-06,
+        "soviet": true,
+        "p_survive_57": 0.0113,
+        "median_tte": 6.0,
+        "mean_tte_exposed": 8.05269545868312,
+        "q10_tte": 0.0,
+        "q90_tte": 19.0,
+        "channel_shares": {
+          "defection": 0.01527258015576009,
+          "deathbed": 0.12147264084150905,
+          "documents": 0.010114291493880854,
+          "soviet": 0.85314048750885
+        }
+      },
+      {
+        "n_core": 1000,
+        "p_base": 4.09e-06,
+        "soviet": false,
+        "p_survive_57": 0.0,
+        "median_tte": 12.0,
+        "mean_tte_exposed": 13.2021,
+        "q10_tte": 2.0,
+        "q90_tte": 25.0,
+        "channel_shares": {
+          "defection": 0.1126,
+          "deathbed": 0.8083,
+          "documents": 0.0791,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 1000,
+        "p_base": 4.09e-06,
+        "soviet": true,
+        "p_survive_57": 0.0,
+        "median_tte": 4.0,
+        "mean_tte_exposed": 5.8229,
+        "q10_tte": 0.0,
+        "q90_tte": 13.0,
+        "channel_shares": {
+          "defection": 0.0592,
+          "deathbed": 0.2733,
+          "documents": 0.0233,
+          "soviet": 0.6442
+        }
+      },
+      {
+        "n_core": 5000,
+        "p_base": 4.09e-06,
+        "soviet": false,
+        "p_survive_57": 0.0,
+        "median_tte": 3.0,
+        "mean_tte_exposed": 4.0823,
+        "q10_tte": 0.0,
+        "q90_tte": 9.0,
+        "channel_shares": {
+          "defection": 0.201,
+          "deathbed": 0.7552,
+          "documents": 0.0438,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 5000,
+        "p_base": 4.09e-06,
+        "soviet": true,
+        "p_survive_57": 0.0,
+        "median_tte": 2.0,
+        "mean_tte_exposed": 2.8237,
+        "q10_tte": 0.0,
+        "q90_tte": 7.0,
+        "channel_shares": {
+          "defection": 0.1489,
+          "deathbed": 0.5296,
+          "documents": 0.0202,
+          "soviet": 0.3013
+        }
+      },
+      {
+        "n_core": 30000,
+        "p_base": 4.09e-06,
+        "soviet": false,
+        "p_survive_57": 0.0,
+        "median_tte": 0.0,
+        "mean_tte_exposed": 0.5562,
+        "q10_tte": 0.0,
+        "q90_tte": 2.0,
+        "channel_shares": {
+          "defection": 0.3393,
+          "deathbed": 0.6605,
+          "documents": 0.0002,
+          "soviet": 0.0
+        }
+      },
+      {
+        "n_core": 30000,
+        "p_base": 4.09e-06,
+        "soviet": true,
+        "p_survive_57": 0.0,
+        "median_tte": 0.0,
+        "mean_tte_exposed": 0.4757,
+        "q10_tte": 0.0,
+        "q90_tte": 2.0,
+        "channel_shares": {
+          "defection": 0.3231,
+          "deathbed": 0.6237,
+          "documents": 0.0001,
+          "soviet": 0.0531
+        }
+      }
+    ],
+    "deathbed_sensitivity_core1000_consP": {
+      "q_db=0.001": {
+        "p_survive_57": 0.1853,
+        "median_tte": 29.0
+      },
+      "q_db=0.01": {
+        "p_survive_57": 0.0,
+        "median_tte": 12.0
+      },
+      "q_db=0.05": {
+        "p_survive_57": 0.0,
+        "median_tte": 4.0
+      }
+    },
+    "soviet_silence_factor_1969_1991": {
+      "q=0.05": 0.3073568677250236,
+      "q=0.1": 0.08862938119652507,
+      "q=0.25": 0.0013378550367377784,
+      "q=0.5": 1.1920928955078125e-07
+    }
+  },
+  "limitations": [
+    "p is calibrated from only three exposed conspiracies; exposed cases may bias p upward (Grimes argues his N choices bias it far downward).",
+    "The 4.09e-6 figure assumes all 30,000 NSA staff knew about PRISM - deliberately the best case for conspirators.",
+    "ABM deathbed (1%/death), document (1e-5/member-yr), Cold-War (x2) and Soviet (10%/yr) parameters are stated assumptions, not calibrated data; sensitivity ranges are reported.",
+    "N_fake_min is a floor built from itemized capabilities; the terrain requirement is strictly impossible at any N, which the floor charitably ignores."
+  ]
+}
