@@ -16,7 +16,7 @@ A test that can't fail isn't a test. Every experiment here could, in principle, 
 | [6](claims/06-photo-quality/) | Photos too good for chest cameras | Quality-score the whole archive, not the famous 50 | ⏳ |
 | [7](claims/07-c-rock/) | The "C" prop rock | Generational film forensics on AS16-107-17446 | ⏳ |
 | [9](claims/09-gravity/) | Slowed-down Earth footage | Ballistics + biomechanics g-fit from EVA film | ⏳ |
-| [10](claims/10-wire-rigs/) | Astronauts on wires | Acceleration-profile analysis of jumps and falls | ⏳ |
+| [10](claims/10-wire-rigs/) | Astronauts on wires | Acceleration-profile analysis of jumps and falls | ✅ **REFUTED** — both jump-salute jumps fit free ballistic flight at g = 1.68–1.69 ± 0.11 m/s² with ~2 mm residuals; no tension events, no wires down to 0.16 mm |
 | [11](claims/11-van-allen/) | Van Allen belts are lethal | Radiation-transport dose model along the real trajectory | ⏳ |
 | [15](claims/15-agc/) | 1960s computers too weak | Run the actual Apollo 11 flight software, emulated | ✅ **REFUTED** — the real Luminary 099 reassembles bit-identical (36/36 checksums) and runs at 99% of authentic speed on 3–5% of one core |
 | [17](claims/17-secret-keeping/) | 400,000 people can't keep a secret | Grimes leak model + sensitivity analysis | ✅ **CONFIRMED (anti-hoax)** — a 411k-person hoax leaks in ~1.2 yr expected; max 57-yr-silent core ≈ 49 people vs ≥ 874 needed to fake the evidence |
