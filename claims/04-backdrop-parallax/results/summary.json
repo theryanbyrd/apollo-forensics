@@ -1,0 +1,54 @@
+{
+  "claim": 4,
+  "title": "Identical backgrounds = backdrop",
+  "images": [
+    "AS15-82-11057 (Station 8/ALSEP pan, EVA-3 164:26:56)",
+    "AS15-82-11082 (Station 9 pan, EVA-3 165:05:09)"
+  ],
+  "provenance": "ALSJ Apollo 15 Map & Image Library captions; scans via Wayback snapshots of hq.nasa.gov/alsj",
+  "camera_stations_baseline_m": 1315,
+  "baseline_radial_m": 1183,
+  "baseline_transverse_m": 573,
+  "sift": {
+    "keypoints": [
+      41201,
+      73477
+    ],
+    "ratio_test_matches": 396,
+    "background_inliers": 17,
+    "foreground_candidates": 68,
+    "foreground_consistent": 3
+  },
+  "global_similarity": {
+    "scale": 0.9587,
+    "rotation_deg": -5.28
+  },
+  "apparent_size_change_percent": [
+    3.5,
+    9.5
+  ],
+  "mountain_distance_from_scale_km": [
+    10.4,
+    34.2
+  ],
+  "internal_parallax_deg": 1.05,
+  "flat_backdrop_internal_parallax_deg": 0.0,
+  "homography_rms_px": 13.9,
+  "homography_rms_deg": 0.312,
+  "homography_residual_layer_spread_px": 35.7,
+  "control_same_station_pair": {
+    "images": [
+      "AS15-82-11081",
+      "AS15-82-11082 (same Station 9 pan, seconds apart)"
+    ],
+    "scale": 1.0167,
+    "homography_rms_px": 3.0,
+    "layer_dx_spread_px": 7.4,
+    "n_points": 214
+  },
+  "conservative_min_distance_m": 285,
+  "backdrop_30m_exclusion_factor": 345,
+  "verdict": "REFUTED",
+  "headline": "Measured parallax puts the 'identical' mountain background 10-34 km away \u2014 it shrinks 4-10% when the camera retreats 1.2 km and shows 1.1 deg of layered depth parallax that no flat painting can produce \u2014 excluding a backdrop at 30 m by >= 345x in distance.",
+  "impressive": "results/blink_aligned.gif \u2014 the two 'identical' backgrounds aligned and blinked: the mountains breathe with real kilometer-scale depth parallax while the foregrounds share nothing."
+}
