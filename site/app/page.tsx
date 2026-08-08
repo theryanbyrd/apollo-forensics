@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, GithubLogo, MoonStars, Waveform } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, MoonStars, Waveform } from "@phosphor-icons/react/dist/ssr";
 import claims from "@/data/claims.json";
 import Reveal from "@/components/Reveal";
 
@@ -98,22 +98,28 @@ export default function Home() {
             Every moon-landing hoax claim testable in software, tested on public data. Each test could have vindicated
             the hoax. None did.
           </p>
-          <div className="mt-7 flex flex-wrap items-center gap-3">
+          <div className="mt-7">
             <Link
               href="/mission"
-              className="inline-flex items-center gap-2 rounded-lg bg-el px-4 py-2.5 text-sm font-bold text-neutral-950 transition-transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-el px-5 py-2.5 text-sm font-bold text-neutral-950 transition-transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
             >
               <MoonStars size={16} weight="fill" aria-hidden />
               Replay Apollo 11 on the real computer
             </Link>
-            <a
-              href={REPO}
-              className="inline-flex items-center gap-2 rounded-lg border border-neutral-700 px-4 py-2.5 text-sm font-semibold text-neutral-200 transition-colors hover:border-neutral-500 active:scale-[0.98]"
-            >
-              <GithubLogo size={16} aria-hidden />
-              Code &amp; data on GitHub
-            </a>
           </div>
+          <dl className="mt-9 grid max-w-md grid-cols-3 gap-6 border-t border-neutral-800 pt-6">
+            {[
+              ["5.0σ", "radio echo detection"],
+              ["36/36", "flight-code checksums"],
+              ["0.2°", "terrain match, JAXA DEM"],
+            ].map(([n, l]) => (
+              <div key={l}>
+                <dt className="sr-only">{l}</dt>
+                <dd className="font-mono text-xl font-bold text-neutral-50">{n}</dd>
+                <dd className="mt-1 text-xs leading-snug text-neutral-500">{l}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
         <figure className="lg:col-span-5">
           <div className="overflow-hidden rounded-xl border border-neutral-800">
@@ -157,7 +163,7 @@ export default function Home() {
               <span className="font-semibold text-el">2.644 ± 0.035 seconds</span> after he speaks. That is the
               Earth-Moon round trip at the speed of light, measured across 43 transmissions in the EVA tape.
             </p>
-            <audio controls preload="none" src="/figures/echo_example.wav" className="mt-5 w-full" />
+            <audio controls preload="none" src="/figures/echo_example.wav" className="mt-5 w-full" aria-label="Eleven-second mission audio sample: CapCom speaks, and his voice returns from the Moon 2.6 seconds later" />
           </div>
         </Reveal>
       </section>

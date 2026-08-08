@@ -35,7 +35,20 @@ body {
 }
 
 .btn-ctl {
-  @apply rounded-md border border-neutral-600 bg-neutral-800/80 px-3 py-1.5 text-xs font-semibold text-neutral-200 transition-colors hover:border-neutral-400;
+  @apply min-h-11 rounded-lg border border-neutral-600 bg-neutral-800/80 px-3.5 text-xs font-semibold text-neutral-200 transition-colors hover:border-neutral-400 active:scale-[0.98];
+}
+
+button,
+a,
+input,
+summary {
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 2px solid #5effcd;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* range slider thumb */

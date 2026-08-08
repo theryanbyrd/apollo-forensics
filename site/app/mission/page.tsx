@@ -301,9 +301,6 @@ export default function MissionPage() {
             clock, or <span className="font-mono">VERB 3 5 ENTR</span> for the lamp test.
           </p>
         </div>
-        <Link href="/" className="text-sm underline opacity-70 hover:opacity-100">
-          ← All 12 claims
-        </Link>
       </header>
 
       {/* clocks + controls */}
@@ -382,7 +379,7 @@ export default function MissionPage() {
             <button
               key={i}
               onClick={() => jump(i)}
-              className="absolute -translate-x-1/2 hover:text-el"
+              className="absolute flex h-8 w-6 -translate-x-1/2 items-end justify-center pb-0.5 hover:text-el"
               style={{ left: `${(e.get / MISSION_END) * 100}%` }}
               title={`${fmtGET(e.get)} ${e.title}`}
             >

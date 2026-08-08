@@ -142,7 +142,7 @@ export default function DSKY({
             <button
               key={i}
               onClick={() => onKey?.(k)}
-              className={`h-10 rounded-md border text-xs font-bold transition-all ${
+              className={`h-11 rounded-md border text-xs font-bold transition-all ${
                 pressedKey === k
                   ? "border-el bg-el/20 text-el"
                   : "border-neutral-600 bg-neutral-800 text-neutral-200 hover:border-neutral-400 active:translate-y-px"
