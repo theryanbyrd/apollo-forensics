@@ -1,0 +1,58 @@
+@import "tailwindcss";
+@import "dseg/css/dseg.css";
+
+@theme {
+  --color-el: #5effcd; /* AGC electroluminescent green-cyan */
+}
+
+:root {
+  --background: #0a0a0c;
+  --foreground: #ededed;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans, ui-sans-serif, system-ui), sans-serif;
+}
+
+.dseg {
+  font-family: "DSEG7-Classic", ui-monospace, monospace;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  white-space: pre;
+}
+
+.dsky-label {
+  @apply text-[9px] font-bold uppercase tracking-[0.2em] text-el/60;
+}
+
+.btn-ctl {
+  @apply rounded-md border border-neutral-600 bg-neutral-800/80 px-3 py-1.5 text-xs font-semibold text-neutral-200 transition-colors hover:border-neutral-400;
+}
+
+/* range slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 8px;
+  border-radius: 3px;
+  background: #5effcd;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(94, 255, 205, 0.7);
+}
+input[type="range"]::-moz-range-thumb {
+  height: 18px;
+  width: 8px;
+  border: none;
+  border-radius: 3px;
+  background: #5effcd;
+  cursor: pointer;
+}
