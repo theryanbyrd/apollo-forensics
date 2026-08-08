@@ -21,7 +21,7 @@ A test that can't fail isn't a test. Every experiment here could, in principle, 
 | [15](claims/15-agc/) | 1960s computers too weak | Run the actual Apollo 11 flight software, emulated | ✅ **REFUTED** — the real Luminary 099 reassembles bit-identical (36/36 checksums) and runs at 99% of authentic speed on 3–5% of one core |
 | [17](claims/17-secret-keeping/) | 400,000 people can't keep a secret | Grimes leak model + sensitivity analysis | ✅ **CONFIRMED (anti-hoax)** — a 411k-person hoax leaks in ~1.2 yr expected; max 57-yr-silent core ≈ 49 people vs ≥ 874 needed to fake the evidence |
 | [20](claims/20-foreign-orbiters/) | (Independence check) Non-NASA orbiters | Terrain-match 1969 photos vs JAXA Kaguya elevation data | ⏳ |
-| [22](claims/22-light-delay/) | (Independence check) Radio physics | Measure the 2.6 s Earth–Moon light delay in mission audio | ⏳ |
+| [22](claims/22-light-delay/) | (Independence check) Radio physics | Measure the 2.6 s Earth–Moon light delay in mission audio | ✅ **CONFIRMED (anti-hoax)** — CapCom's voice measurably returns from the Moon 2.644 ± 0.035 s after he speaks (5.0σ, n=43), matching the JPL ephemeris. You can [hear it](claims/22-light-delay/results/echo_example.wav) |
 
 ## Ground rules
 
