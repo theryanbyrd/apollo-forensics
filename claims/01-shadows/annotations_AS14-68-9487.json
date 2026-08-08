@@ -1,0 +1,43 @@
+{
+  "image": "data/AS14-68-9487.jpg",
+  "frame_id": "AS14-68-9487",
+  "source_url": "https://www.lpi.usra.edu/resources/apollo/images/print/AS14/68/9487.jpg",
+  "scan_size_px": [3900, 3900],
+  "mission": "Apollo 14",
+  "camera": "Hasselblad EDC, Zeiss Biogon 5.6/60, calibrated focal length 61.1 mm, reseau plate 10 mm grid",
+  "alsj_caption": "135:01:56 Frame from Ed's Station H pan. Rightward of 9486 (9486: 'Photo toward the LM from Station H. We are looking ESE. Al is to the left of the spacecraft... aiming the TV camera at the MESA.')",
+  "alsj_source": "ALSJ Apollo 14 Image Library (hq.nasa.gov/alsj/a14/images14.html, via web.archive.org)",
+  "get_time": "135:01:56",
+  "launch_utc": "1971-01-31T21:03:02Z",
+  "photo_utc": "1971-02-06T12:04:58Z",
+  "photo_utc_uncertainty_minutes": 10,
+  "site": { "name": "Fra Mauro (Apollo 14 LM Antares)", "lat_deg": -3.64544, "lon_east_deg": -17.47139 },
+  "camera_height_m": { "value": 1.40, "sigma": 0.15, "note": "chest-mounted Hasselblad on standing suited astronaut" },
+  "digitization_process": "Every coordinate below was read manually from labeled-grid crops of the full-resolution scan rendered by digitize_helper.py (grid steps 10-50 px, coordinates in full-image pixels, origin top-left, x right, y down). Sigmas are 1-sigma reading uncertainties judged per feature (fuzzier penumbrae and rock/shadow boundaries get larger sigmas). This is an up-sun photograph: rocks present their shaded faces to the camera and partially occlude the near end of their own shadows, so 'base' points are placed on the visible shadow-band axis near the casting object rather than at an exact (occluded) ground contact, and carry correspondingly larger sigmas.",
+  "shadow_lines": [
+    { "name": "boulder_B1",  "base": [1850, 3210], "sigma_base": 15, "tip": [2262, 3335], "sigma_tip": 12, "note": "large foreground boulder, long clean shadow band" },
+    { "name": "boulder_B2",  "base": [2700, 3145], "sigma_base": 20, "tip": [3135, 3345], "sigma_tip": 12, "note": "boulder cluster (tallest pinnacle), longest shadow in frame" },
+    { "name": "rock_C",      "base": [2065, 3445], "sigma_base": 12, "tip": [2278, 3545], "sigma_tip": 12, "note": "bottom-center rock" },
+    { "name": "rock_D",      "base": [3400, 3103], "sigma_base": 12, "tip": [3503, 3148], "sigma_tip": 12, "note": "small rock right of boulder field" },
+    { "name": "rock_W1",     "base": [200, 2720],  "sigma_base": 18, "tip": [256, 2738],  "sigma_tip": 10, "note": "left-edge rock; short line, low weight" },
+    { "name": "rock_W2",     "base": [800, 2700],  "sigma_base": 18, "tip": [903, 2742],  "sigma_tip": 10, "note": "left-side rock with pointed shadow tail" },
+    { "name": "astronaut",   "base": [1433, 2100], "sigma_base": 10, "tip": [1517, 2119], "sigma_tip": 35, "note": "Al Shepard by the TV camera ~100 m away; shadow tip blends into disturbed ground - low-confidence tip, inflated sigma" },
+    { "name": "lm_shadow",   "base": [2700, 2122], "sigma_base": 20, "tip": [3150, 2117], "sigma_tip": 45, "note": "two points along the LM shadow band axis; far tip is soft penumbra ~16 m from the LM" }
+  ],
+  "top_tip_lines": [
+    { "name": "boulder_B1",  "top": [1690, 3035], "sigma_top": 25, "tip": [2262, 3335], "sigma_tip": 12, "note": "boulder summit -> its shadow tip" },
+    { "name": "boulder_B2",  "top": [2455, 2960], "sigma_top": 35, "tip": [3135, 3345], "sigma_tip": 15, "note": "tallest pinnacle of cluster (identification uncertain, large sigma)" },
+    { "name": "rock_C",      "top": [2020, 3400], "sigma_top": 15, "tip": [2278, 3545], "sigma_tip": 12 },
+    { "name": "rock_D",      "top": [3395, 3080], "sigma_top": 12, "tip": [3503, 3148], "sigma_tip": 12 },
+    { "name": "astronaut",   "top": [1424, 1990], "sigma_top": 8,  "tip": [1517, 2119], "sigma_tip": 35, "note": "helmet top -> head end of shadow; tip low-confidence" },
+    { "name": "lm",          "top": [2275, 1795], "sigma_top": 15, "tip": [3150, 2117], "sigma_tip": 45, "note": "ascent-stage top (silhouetted above ridge line) -> far end of LM shadow band" }
+  ],
+  "horizon_points": {
+    "points": [[0, 1645], [300, 1662], [600, 1692], [900, 1683], [1200, 1673], [1500, 1685], [1800, 1706], [2100, 1723], [2400, 1735], [2700, 1745], [3000, 1762], [3230, 1793], [3500, 1768], [3700, 1758], [3890, 1755]],
+    "sigma_read": 12,
+    "sigma_sys": 60,
+    "tilt_sys_deg": 0.4,
+    "note": "Visible skyline is undulating ridge terrain (Fra Mauro), not a sharp mare horizon; sigma_sys covers skyline-vs-true-ground-vanishing-line offset, tilt_sys covers a correlated tilt error."
+  },
+  "reseau_seed": { "center": [1955, 1950], "spacing": 745.0, "threshold": 0.62 }
+}

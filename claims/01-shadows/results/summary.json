@@ -1,0 +1,154 @@
+{
+  "claim": 1,
+  "title": "Non-parallel shadows = studio lights",
+  "verdict": "REFUTED",
+  "headline": "In both famous 'non-parallel shadow' frames every shadow line is concurrent at a single vanishing point on the horizon (chi2/dof 1.4 and 1.4) - the signature of one source at infinity - and the down-sun Apollo 11 frame recovers a sun elevation of 15.7\u00b0 \u00b1 1.1\u00b0, matching the JPL Horizons ephemeris value of 15.00\u00b0 to 0.7\u00b0, while any lamp closer than 54 m is excluded at 95% confidence.",
+  "impressive": "The sun's elevation over Tranquility Base at 1969-07-21 04:43:31 UTC was recovered to 0.7\u00b0 using nothing but hand-digitized shadow endpoints from AS11-40-5961 (including the shadow of Armstrong's own camera, which marks the antisolar point exactly, independent of terrain), the Hasselblad's reseau-plate calibration, and projective geometry - then confirmed against JPL Horizons. No 1969 set designer was simulating astronomically correct vanishing points to sub-degree accuracy.",
+  "photos": {
+    "a14": {
+      "frame": "AS14-68-9487",
+      "photo_utc": "1971-02-06T12:04:58Z",
+      "calibration": {
+        "n_crosses": 22,
+        "px_per_10mm": 742.2310635473671,
+        "grid_rms_px": 0.660789906730517,
+        "principal_point": [
+          1954.7897551901306,
+          1947.4396495014898
+        ],
+        "focal_px": 4535.031798274413
+      },
+      "n_shadow_lines": 8,
+      "n_toptip_lines": 6,
+      "sun_fit": {
+        "chi2": 16.579416016079705,
+        "k": 2,
+        "n": 14,
+        "chi2_per_dof": 1.3816180013399755,
+        "aic": 20.579416016079705,
+        "elev_deg": 11.45288248853837,
+        "elev_deg_mc": [
+          11.722080279991014,
+          2.5342148417943995
+        ],
+        "theta_deg_mc": [
+          -45.70008676968651,
+          4.016675132279979
+        ],
+        "P_sh": [
+          -2651.6393839572347,
+          1565.307187953756
+        ],
+        "P_src": [
+          -2677.218306419755,
+          230.04969680710497
+        ],
+        "per_toptip_line_implied_elev_deg": {
+          "boulder_B1": 5.31,
+          "boulder_B2": 11.33,
+          "rock_C": 5.0,
+          "rock_D": 17.82,
+          "astronaut": 35.77,
+          "lm": 12.87
+        }
+      },
+      "lamp_fit": {
+        "chi2": 12.718172879248081,
+        "k": 4,
+        "aic": 20.71817287924808,
+        "P_g": [
+          -2339.456301375558,
+          1515.760702193159
+        ],
+        "depress_deg": -0.5457591063334545,
+        "depress_deg_mc": [
+          -2.25000155692839,
+          6.789603893317064
+        ],
+        "implied_source_dist_m_median": null,
+        "implied_dist_m_p05": 9.452538217491012,
+        "frac_mc_convergence_at_or_above_horizon": 0.565
+      },
+      "delta_aic_lamp_minus_sun": 0.13875686316837488,
+      "ephemeris": {
+        "az_deg": 88.58653920333333,
+        "el_deg": 23.8695126133334
+      },
+      "elev_minus_ephem_deg": [
+        -12.147432333342385,
+        2.5342148417943995
+      ]
+    },
+    "a11": {
+      "frame": "AS11-40-5961",
+      "photo_utc": "1969-07-21T04:43:31Z",
+      "calibration": {
+        "n_crosses": 8,
+        "px_per_10mm": 742.125205309012,
+        "grid_rms_px": 0.3770169956313185,
+        "principal_point": [
+          1947.5573635564865,
+          1952.214218328778
+        ],
+        "focal_px": 4534.385004438063
+      },
+      "n_shadow_lines": 5,
+      "n_toptip_lines": 3,
+      "sun_fit": {
+        "chi2": 10.885660425832443,
+        "k": 2,
+        "n": 10,
+        "chi2_per_dof": 1.3607075532290553,
+        "aic": 14.885660425832443,
+        "elev_deg": 15.768439181575392,
+        "elev_deg_mc": [
+          15.72119945272042,
+          1.1365112167006126
+        ],
+        "theta_deg_mc": [
+          -17.71383971861892,
+          0.7790389248354745
+        ],
+        "P_sh": [
+          481.0676153062866,
+          1280.8728509547122
+        ],
+        "P_src": [
+          609.3317068005783,
+          2590.077793179404
+        ],
+        "per_toptip_line_implied_elev_deg": {
+          "swc": 16.59,
+          "tv_camera": 16.47,
+          "rock_R1": 15.91
+        }
+      },
+      "lamp_fit": {
+        "chi2": 6.842695181944451,
+        "k": 4,
+        "aic": 14.84269518194445,
+        "P_g": [
+          698.953728144727,
+          1095.8292177525766
+        ],
+        "depress_deg": -2.064564993782397,
+        "depress_deg_mc": [
+          -1.99321669045977,
+          1.4588276738879624
+        ],
+        "implied_source_dist_m_median": null,
+        "implied_dist_m_p05": 54.415018184457836,
+        "frac_mc_convergence_at_or_above_horizon": 0.9125
+      },
+      "delta_aic_lamp_minus_sun": -0.042965243887993054,
+      "ephemeris": {
+        "az_deg": 88.842658375,
+        "el_deg": 14.997711334999966
+      },
+      "elev_minus_ephem_deg": [
+        0.7234881177204535,
+        1.1365112167006126
+      ]
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "image": "data/AS11-40-5961.jpg",
+  "frame_id": "AS11-40-5961",
+  "source_url": "https://www.lpi.usra.edu/resources/apollo/images/print/AS11/40/5961.jpg",
+  "scan_size_px": [3900, 3900],
+  "mission": "Apollo 11",
+  "camera": "Hasselblad EDC, Zeiss Biogon 5.6/60, calibrated focal length 61.1 mm, reseau plate 10 mm grid",
+  "alsj_caption": "111:11:31 Down-Sun photograph of the LM from the rim of Little West Crater. We can see Neil's shadow and the shadow of the Gold camera.",
+  "alsj_source": "ALSJ Apollo 11 Image Library (hq.nasa.gov/alsj/a11/images11.html, via web.archive.org)",
+  "get_time": "111:11:31",
+  "launch_utc": "1969-07-16T13:32:00Z",
+  "photo_utc": "1969-07-21T04:43:31Z",
+  "photo_utc_uncertainty_minutes": 5,
+  "site": { "name": "Tranquility Base (Apollo 11)", "lat_deg": 0.67408, "lon_east_deg": 23.47297 },
+  "camera_height_m": { "value": 1.40, "sigma": 0.15 },
+  "digitization_process": "Coordinates read manually from labeled-grid crops (digitize_helper.py, 10-50 px grids, full-image pixel coordinates). Down-sun photograph: shadows recede from the camera toward the antisolar vanishing point. Neil's own shadow falls across the near slope of Little West Crater, which visibly bends its 2D direction - it is included with a large terrain sigma and flagged. The Gold-camera shadow (long diagonal rod) is EXCLUDED from line fits: the shadow of a non-vertical rod does not lie along the solar-azimuth ground direction, so it carries no constraint usable by this method. The flag-pole shadow is excluded because it is entangled with LM strut shadows.",
+  "shadow_lines": [
+    { "name": "neil_axis",  "base": [525, 3390], "sigma_base": 35, "tip": [585, 2462], "sigma_tip": 12, "sigma_extra_perp": 60, "note": "crotch-point -> helmet-shadow apex of Neil's shadow; falls across crater slope, terrain-deflected; sigma_extra_perp inflates it accordingly" },
+    { "name": "swc",        "base": [1886, 1400], "sigma_base": 7,  "tip": [1813, 1372], "sigma_tip": 8,  "note": "Solar Wind Collector staff on flat ground near LM" },
+    { "name": "tv_camera",  "base": [2299, 1303], "sigma_base": 6,  "tip": [2223, 1295], "sigma_tip": 6,  "note": "TV camera on tripod, thin clean shadow" },
+    { "name": "rock_R1",    "base": [3500, 1389], "sigma_base": 7,  "tip": [3408, 1389], "sigma_tip": 7,  "note": "foreground-right rock on level ground" },
+    { "name": "rock_R2",    "base": [3833, 1404], "sigma_base": 7,  "tip": [3789, 1405], "sigma_tip": 7,  "note": "far-right rock; short line" }
+  ],
+  "top_tip_lines": [
+    { "name": "swc",       "top": [1887, 1297], "sigma_top": 5, "tip": [1813, 1372], "sigma_tip": 8 },
+    { "name": "tv_camera", "top": [2299, 1237], "sigma_top": 5, "tip": [2223, 1295], "sigma_tip": 6 },
+    { "name": "rock_R1",   "top": [3516, 1370], "sigma_top": 7, "tip": [3408, 1389], "sigma_tip": 8 }
+  ],
+  "antisolar_point": {
+    "xy": [590, 2680],
+    "sigma": [70, 110],
+    "note": "Shadow of Neil's chest-mounted Hasselblad (the camera that took the frame), placed at chest height on the shadow silhouette between shoulder line (~y2655) and mid-torso. The image of the taking-camera's own shadow is EXACTLY the antisolar direction's vanishing point, independent of the terrain the shadow falls on (every point of the antisolar ray through the entrance pupil projects to the same image point)."
+  },
+  "horizon_points": {
+    "points": [[80, 1284], [300, 1281], [610, 1283], [870, 1271], [1130, 1275], [1600, 1225], [1830, 1218], [2075, 1201], [2400, 1180], [2750, 1172], [3100, 1152], [3425, 1140], [3800, 1128]],
+    "sigma_read": 10,
+    "sigma_sys": 40,
+    "tilt_sys_deg": 0.4,
+    "note": "Distant mare horizon, flatter than the A14 skyline; mild kink near the LM (x 1130-1600) where near ridge terrain overlaps."
+  },
+  "reseau_seed": { "center": [1979, 1923], "spacing": 723.0, "threshold": 0.55 }
+}
