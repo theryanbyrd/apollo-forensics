@@ -1,0 +1,34 @@
+{
+  "claim": 20,
+  "title": "Foreign orbiters verify the terrain",
+  "verdict": "CONFIRMED REAL TERRAIN - backdrop claim falsified. Skylines in two 1971 Apollo 15 surface photographs match the horizon computed from JAXA's 2008 Kaguya/SELENE Terrain Camera DEM to ~0.2 deg RMS, with unique best-fit azimuths exactly at the documented viewing directions.",
+  "headline": "The 2008 Japanese Kaguya DEM reproduces the 1971 Apollo 15 skylines to 0.18-0.21 deg RMS (r = 0.998 / 0.995): AS15-88-11866 locks onto Mons Hadley Delta at azimuth 184.8 deg and AS15-86-11603 onto Mons Hadley at 46.3 deg - both exactly where the mission record says the cameras pointed, on mountains the DEM shows are 17-20 km away and 3.5-4.1 km high.",
+  "impressive": "results/overlay_AS15-88-11866.png - the famous flag-salute photograph with the skyline predicted from the 2008 Japanese orbiter DEM drawn over it: the green curve rides the photographed ridge of Mons Hadley Delta across the whole frame (RMS 0.179 deg, r = 0.9985), passing behind the LM and reappearing on the low ridge beyond the Rover.",
+  "details": {
+    "dem": {
+      "agency": "JAXA (Japan)",
+      "mission": "Kaguya / SELENE (2007-2009)",
+      "instrument": "Terrain Camera (10 m stereo)",
+      "product": "SLN-L-TC-5-DTM-MAP-SEAMLESS-V2.0",
+      "tiles": [
+        "DTM_MAPs02_N27E003N24E006SC",
+        "DTM_MAPs02_N27E000N24E003SC",
+        "DTM_MAPs02_N30E003N27E006SC",
+        "DTM_MAPs02_N30E000N27E003SC"
+      ],
+      "archive": "https://darts.isas.jaxa.jp/pub/pds3/sln-l-tc-5-dtm-map-seamless-v2.0/",
+      "resolution": "3600 px/deg (~8.4 m/px)"
+    },
+    "site": {
+      "lm": [26.1322, 3.6339],
+      "lm_elevation_m": -1925.9,
+      "mons_hadley": {"summit": [26.6269, 4.1272], "rise_above_site_m": 4071, "bearing_deg": 41.8, "distance_km": 20.1},
+      "mons_hadley_delta": {"summit": [25.5678, 3.7606], "rise_above_site_m": 3518, "bearing_deg": 168.6, "distance_km": 17.5}
+    },
+    "matches": {
+      "AS15-88-11866": {"skyline": "Mons Hadley Delta", "yaw_deg": 184.78, "rms_deg": 0.179, "pearson_r": 0.9985, "second_best_rms_deg": 1.553, "azimuth_agrees": true},
+      "AS15-86-11603": {"skyline": "Mons Hadley", "yaw_deg": 46.30, "rms_deg": 0.208, "pearson_r": 0.9951, "second_best_rms_deg": 0.649, "azimuth_agrees": true}
+    },
+    "method": "photo skyline pixels -> 3D rays (focal 61.1 mm calibrated, pixel scale from the film's 10 mm reseau grid = 75.2 px/mm); fit only camera yaw/pitch/roll by minimizing RMS vs the DEM-rendered 360-deg horizon (curvature drop d^2/2R included, R = 1737.4 km)"
+  }
+}

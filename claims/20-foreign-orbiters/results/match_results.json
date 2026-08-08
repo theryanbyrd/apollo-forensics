@@ -1,0 +1,42 @@
+{
+  "AS15-88-11866": {
+    "yaw_deg": 184.78000000000006,
+    "pitch_deg": -1.0999999999999985,
+    "roll_deg": 1.8000000000000032,
+    "rms_deg": 0.17864726422872915,
+    "pearson_r": 0.9984983989936604,
+    "second_best_rms_deg": 1.5531637275257124,
+    "rms_contrast": 8.694024698509436,
+    "n_columns": 2333,
+    "az_span_deg": [
+      161.67130457836174,
+      207.64770928988128
+    ],
+    "documented": "south - Mons Hadley Delta (DEM summit bearing 168.6 deg)",
+    "expected_az_range": [
+      150.0,
+      195.0
+    ],
+    "azimuth_agrees": true
+  },
+  "AS15-86-11603": {
+    "yaw_deg": 46.30000000000008,
+    "pitch_deg": -7.840000000000012,
+    "roll_deg": -0.4999999999999989,
+    "rms_deg": 0.2081900530977243,
+    "pearson_r": 0.9950606864114148,
+    "second_best_rms_deg": 0.6490445112147594,
+    "rms_contrast": 3.1175577389862053,
+    "n_columns": 2487,
+    "az_span_deg": [
+      39.44423424317614,
+      68.37232737891844
+    ],
+    "documented": "northeast - Mons Hadley (DEM summit bearing 41.8 deg)",
+    "expected_az_range": [
+      25.0,
+      70.0
+    ],
+    "azimuth_agrees": true
+  }
+}
