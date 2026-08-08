@@ -40,7 +40,7 @@ function ClaimCard({ c, featured }: { c: Claim; featured: boolean }) {
         />
         <span
           className={`absolute left-3 top-3 rounded-md px-2 py-0.5 text-[10px] font-bold tracking-widest ${
-            c.verdict === "REFUTED" ? "bg-red-500/90 text-white" : "bg-el/90 text-neutral-950"
+            c.verdict === "REFUTED" ? "bg-red-600 text-white" : "bg-el/90 text-neutral-950"
           }`}
         >
           {c.verdict}
@@ -49,7 +49,7 @@ function ClaimCard({ c, featured }: { c: Claim; featured: boolean }) {
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-baseline justify-between">
           <h2 className="text-lg font-bold leading-snug">{c.title}</h2>
-          <span className="dseg ml-3 shrink-0 text-sm text-neutral-600">{String(c.num).padStart(2, "0")}</span>
+          <span aria-hidden className="dseg ml-3 shrink-0 text-sm text-neutral-400">{String(c.num).padStart(2, "0")}</span>
         </div>
         <p className="mt-2 text-sm italic leading-relaxed text-neutral-400">&ldquo;{c.claim}&rdquo;</p>
         <p className="mt-3 rounded-lg border border-el/15 bg-el/5 p-3 text-sm font-medium leading-relaxed text-neutral-100">
@@ -86,8 +86,7 @@ export default function Home() {
       {/* asymmetric split hero: copy left, real evidence artifact right */}
       <header className="grid items-center gap-10 lg:grid-cols-12">
         <div className="lg:col-span-7">
-          <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-el/80">Apollo Forensics</p>
-          <h1 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
             12 hoax claims.
             <br />
             12 falsifiable tests.
@@ -111,12 +110,12 @@ export default function Home() {
             {[
               ["5.0σ", "radio echo detection"],
               ["36/36", "flight-code checksums"],
-              ["0.2°", "terrain match, JAXA DEM"],
+              ["0.2°", "terrain match vs JAXA"],
             ].map(([n, l]) => (
               <div key={l}>
                 <dt className="sr-only">{l}</dt>
                 <dd className="font-mono text-xl font-bold text-neutral-50">{n}</dd>
-                <dd className="mt-1 text-xs leading-snug text-neutral-500">{l}</dd>
+                <dd className="mt-1 text-xs leading-snug text-neutral-400">{l}</dd>
               </div>
             ))}
           </dl>
@@ -134,7 +133,7 @@ export default function Home() {
               className="w-full"
             />
           </div>
-          <figcaption className="mt-2 text-xs leading-relaxed text-neutral-500">
+          <figcaption className="mt-2 text-xs leading-relaxed text-neutral-400">
             The famous &ldquo;identical background&rdquo; pair, aligned and blinking. The mountain is real terrain
             measured at 10-34 km away in <a className="underline hover:text-neutral-300" href="#claim-4">claim #4</a>.
           </figcaption>
@@ -168,7 +167,7 @@ export default function Home() {
         </Reveal>
       </section>
 
-      <footer className="mt-20 border-t border-neutral-800 py-8 text-center text-xs leading-relaxed text-neutral-500">
+      <footer className="mt-20 border-t border-neutral-800 py-8 text-center text-xs leading-relaxed text-neutral-400">
         <p>
           Built with Claude Code. Methodology from &ldquo;The Moon Landing Verification Playbook.&rdquo; Everything
           reproducible from{" "}

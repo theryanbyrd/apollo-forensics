@@ -77,7 +77,7 @@ export default function DSKY({
     <div className="dsky select-none rounded-lg border border-neutral-700 bg-neutral-900 p-4 shadow-2xl">
       <div className="flex gap-4">
         {/* annunciator panel */}
-        <div className="grid w-36 grid-cols-2 content-start gap-1">
+        <div className="grid w-28 sm:w-36 grid-cols-2 content-start gap-1">
           {LIGHTS.map((l) => (
             <div
               key={l.id}
@@ -88,7 +88,7 @@ export default function DSKY({
                     ? l.id === "PROG" || l.id === "OPR ERR" || l.id === "RESTART"
                       ? "border-amber-300 bg-amber-400 text-black shadow-[0_0_14px_rgba(251,191,36,0.9)]"
                       : "border-neutral-200 bg-neutral-100 text-black"
-                    : "border-neutral-700 bg-neutral-800 text-neutral-500"
+                    : "border-neutral-700 bg-neutral-800 text-neutral-400"
               }`}
             >
               {l.label}
@@ -110,24 +110,24 @@ export default function DSKY({
             </div>
             <div className="text-right">
               <div className="dsky-label">PROG</div>
-              <Seg text={state.prog} className="text-3xl text-el" />
+              <Seg text={state.prog} className="text-2xl sm:text-3xl text-el" />
             </div>
           </div>
 
           <div className="mt-2 flex justify-between">
             <div>
               <div className="dsky-label">VERB</div>
-              <Seg text={vnVisible ? state.verb : "  "} className="text-3xl text-el" />
+              <Seg text={vnVisible ? state.verb : "  "} className="text-2xl sm:text-3xl text-el" />
             </div>
             <div className="text-right">
               <div className="dsky-label">NOUN</div>
-              <Seg text={vnVisible ? state.noun : "  "} className="text-3xl text-el" />
+              <Seg text={vnVisible ? state.noun : "  "} className="text-2xl sm:text-3xl text-el" />
             </div>
           </div>
 
           {[state.r1, state.r2, state.r3].map((r, i) => (
             <div key={i} className="mt-1 border-t border-el/40 pt-1 text-right">
-              <Seg text={r} className="text-3xl tracking-wider text-el" />
+              <Seg text={r} className="text-2xl sm:text-3xl tracking-wider text-el" />
             </div>
           ))}
         </div>
