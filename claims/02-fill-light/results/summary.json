@@ -1,0 +1,184 @@
+{
+  "claim": 2,
+  "title": "Visible in shadow = fill lights",
+  "hapke_params": {
+    "566nm": {
+      "w": 0.1879,
+      "b": 0.2545,
+      "c": 0.158,
+      "Bc0": 0.0,
+      "hc": 1.0,
+      "Bs0": 2.134,
+      "hs": 0.0623,
+      "phi": 0.0
+    },
+    "643nm": {
+      "w": 0.2224,
+      "b": 0.2543,
+      "c": 0.16,
+      "Bc0": 0.0,
+      "hc": 1.0,
+      "Bs0": 1.9933,
+      "hs": 0.0597,
+      "phi": 0.0
+    },
+    "theta_bar_deg": 23.657,
+    "map_cell_lon_lat": [
+      23.5,
+      0.5
+    ],
+    "source": "LROC WAC_HAPKEPARAMMAP (Sato et al. 2014), PDS RDR"
+  },
+  "validation": {
+    "normal_albedo_566": 0.1142,
+    "normal_albedo_643": 0.1302,
+    "disk_full_over_quarter": 12.1,
+    "observed_full_over_quarter": "6-12 (V-band, textbook range)",
+    "dhr_at_i75.8": 0.0599
+  },
+  "fill_irradiance_wm2": {
+    "suit_boot_z0.2": 1.025,
+    "suit_thigh_z0.65": 3.141,
+    "suit_torso_z1.05": 4.77,
+    "suit_plss_z1.45": 6.15,
+    "suit_5866_z2.7": 9.018,
+    "direct_sun_vertical": 1279.5,
+    "counterfactual_black_ground": 0.0,
+    "lambertian_ground": 2.53,
+    "no_roughness": 8.759,
+    "band643": 5.585,
+    "lm_foil_bounce_upper_bound": 13.45,
+    "sensitivity": {
+      "n_az240": 4.539,
+      "n_az270": 4.77,
+      "n_az300": 4.678,
+      "x-2.8": 4.795,
+      "wide_shadow": 2.268
+    }
+  },
+  "predicted": {
+    "5866_ratio_suit_over_ground": 0.799,
+    "L_sunlit_ground_mid_wm2sr": 2.613,
+    "L_sunlit_ground_far_wm2sr": 2.731,
+    "L_suit_torso_wm2sr": 1.033,
+    "ratio_suitshadow_over_sunlitground": 0.395,
+    "ratio_envelope": [
+      0.219,
+      0.723
+    ],
+    "suit_gradient_rel_torso": {
+      "boot": 0.215,
+      "thigh": 0.658,
+      "torso": 1.0,
+      "plss": 1.289
+    },
+    "geometry_mid_ieg_deg": [
+      75.8,
+      81.8,
+      139.2
+    ]
+  },
+  "measured": {
+    "suit_torso_over_ground_mid": 0.255,
+    "suit_torso_over_ground_far": 0.28,
+    "boot_over_torso": 0.075,
+    "thigh_over_torso": 0.63,
+    "plss_over_torso": 1.074,
+    "shadowground_over_ground_mid": 0.0002,
+    "foil_over_ground_mid": 0.291,
+    "decode_spread_suit_over_ground": [
+      0.234,
+      0.291
+    ],
+    "sky_level_linear": 0.01429,
+    "5866_suit_over_ground": 0.845,
+    "5866_shadowground_over_ground": 0.0126
+  },
+  "measured_raw_patches_5869": {
+    "sky": {
+      "Y": 0.01429,
+      "Y_std": 0.0052,
+      "rgb8": [
+        14.0,
+        35.0,
+        36.0
+      ]
+    },
+    "suit_plss": {
+      "Y": 0.20922,
+      "Y_std": 0.10029,
+      "rgb8": [
+        126.0,
+        126.0,
+        127.0
+      ]
+    },
+    "suit_torso": {
+      "Y": 0.19587,
+      "Y_std": 0.18971,
+      "rgb8": [
+        124.0,
+        122.0,
+        120.0
+      ]
+    },
+    "suit_thigh": {
+      "Y": 0.12861,
+      "Y_std": 0.13006,
+      "rgb8": [
+        103.0,
+        100.0,
+        98.0
+      ]
+    },
+    "suit_boot": {
+      "Y": 0.02784,
+      "Y_std": 0.01075,
+      "rgb8": [
+        46.0,
+        47.0,
+        46.0
+      ]
+    },
+    "ground_sunlit_mid": {
+      "Y": 0.72518,
+      "Y_std": 0.11571,
+      "rgb8": [
+        215.0,
+        223.0,
+        223.0
+      ]
+    },
+    "ground_sunlit_far": {
+      "Y": 0.66343,
+      "Y_std": 0.11234,
+      "rgb8": [
+        207.0,
+        214.0,
+        214.0
+      ]
+    },
+    "ground_shadow_deep": {
+      "Y": 0.01443,
+      "Y_std": 0.00505,
+      "rgb8": [
+        18.0,
+        35.0,
+        35.0
+      ]
+    },
+    "lm_foil_sunlit": {
+      "Y": 0.22109,
+      "Y_std": 0.31909,
+      "rgb8": [
+        146.0,
+        127.0,
+        84.0
+      ]
+    }
+  },
+  "verdict": "BUSTED - no fill lamps needed",
+  "headline": "Sun->regolith->suit bounce predicts the shadowed suit at 40% of sunlit-ground radiance [22-72%]; the photo measures 26% [23-29% across film-decode assumptions] - factor 0.6 agreement, inside the honest error budget.",
+  "impressive": "The measured brightness gradient down Aldrin's body (PLSS/torso bright, boots dark) and the near-black horizontal ground inside the same shadow match the ground-bounce model's geometric signature - a pattern a studio fill lamp would invert (a lamp lights the floor of the shadow; ground bounce cannot, because the shadowed floor is coplanar with the source).",
+  "provenance_note": "see README.md parameter provenance table"
+}

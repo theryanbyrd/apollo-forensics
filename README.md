@@ -11,7 +11,7 @@ A test that can't fail isn't a test. Every experiment here could, in principle, 
 | # | Claim | Test | Verdict |
 |---|-------|------|---------|
 | [1](claims/01-shadows/) | Non-parallel shadows = studio lights | Geometric light-source fit + JPL ephemeris cross-check | ⏳ |
-| [2](claims/02-fill-light/) | Astronauts visible in shadow = fill lamps | Hapke-BRDF radiometry of regolith bounce light | ⏳ |
+| [2](claims/02-fill-light/) | Astronauts visible in shadow = fill lamps | Hapke-BRDF radiometry of regolith bounce light | ✅ **REFUTED** — regolith bounce predicts the shadowed suit at 40% of sunlit ground [22–72%]; the photo measures 26%. Slightly *less* light than physics supplies — the opposite of a lamp |
 | [4](claims/04-backdrop-parallax/) | Identical backgrounds = painted backdrop | Feature-match parallax between camera stations | ⏳ |
 | [6](claims/06-photo-quality/) | Photos too good for chest cameras | Quality-score the whole archive, not the famous 50 | ⏳ |
 | [7](claims/07-c-rock/) | The "C" prop rock | Generational film forensics on AS16-107-17446 | ⏳ |
