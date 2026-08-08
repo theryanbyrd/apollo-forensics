@@ -1,0 +1,7 @@
+{
+  "claim": 11,
+  "title": "Van Allen belts are lethal",
+  "verdict": "REFUTED",
+  "headline": "Computed Apollo 11 mission dose 2.4 mGy (band 1.7-4.6) vs 1.8 mGy measured on the crew's film badges vs ~4500 mGy for a 50% lethal dose - a factor of ~1,855 below lethal.",
+  "impressive": "The environment numbers come from NASA's actual AE-8/AP-8 trapped-radiation models - the model coefficient files are read directly and evaluated with a pure-Python port of the reference TRARA1/TRARA2 Fortran (validated to <4e-6 against the genuine compiled radbelt wheel across 4,896 points), on the actual AS-506 post-TLI conic, which the code shows crossing the inner proton belt in ~15 minutes at 30-40 deg magnetic latitude - exactly the core-dodging geometry the trajectory designers claimed. Even parking the CSM inside the inner-belt core would take ~52 hours to reach LD50; the crossing took minutes. The August 1972 solar storm counterfactual lands within the CM at ~2851 mGy - within 25% of NASA's own 1975 estimate for that event (SP-368: '360 rads to their skin') - unpleasant, survivable, and ~5000x the actual belt-transit dose, which is why radiation was a managed risk, not a hoax tell."
+}

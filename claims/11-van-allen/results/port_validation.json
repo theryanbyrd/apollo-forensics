@@ -1,0 +1,22 @@
+{
+  "n_cases": 4896,
+  "n_both_zero": 3199,
+  "n_zero_mismatch": 0,
+  "n_nonzero_compared": 1697,
+  "max_rel_err": 3.612840963276284e-06,
+  "median_rel_err": 1.66041324844245e-07,
+  "worst_case": {
+    "case": [
+      "ap8max",
+      "p",
+      "max",
+      80,
+      1.7,
+      4.0
+    ],
+    "fortran": 2.5181190967559814,
+    "port": 2.5181281943198046,
+    "rel_err": 3.612840963276284e-06
+  },
+  "reference": "radbelt 0.1.8 compiled Fortran wheel (github.com/nasa/radbelt)"
+}

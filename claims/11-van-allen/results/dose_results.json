@@ -1,0 +1,88 @@
+{
+  "engine": "radbelt (IGRF L,B/B0 + NASA Fortran AE8/AP8)",
+  "belt_transit_dose_mGy": {
+    "3.0": {
+      "outbound": {
+        "proton_mGy": 0.2994939414000152,
+        "brems_mGy": 0.1467165359462956,
+        "total_mGy": 0.4462104773463108
+      },
+      "inbound": {
+        "proton_mGy": 0.03861167700082707,
+        "brems_mGy": 0.1835884350948003,
+        "total_mGy": 0.22220011209562737
+      },
+      "both": 0.6684105894419382
+    },
+    "7.5": {
+      "outbound": {
+        "proton_mGy": 0.1321761193625096,
+        "brems_mGy": 0.1467165359462956,
+        "total_mGy": 0.2788926553088052
+      },
+      "inbound": {
+        "proton_mGy": 0.009452067275141194,
+        "brems_mGy": 0.1835884350948003,
+        "total_mGy": 0.1930405023699415
+      },
+      "both": 0.47193315767874666
+    },
+    "15.0": {
+      "outbound": {
+        "proton_mGy": 0.055036390482474024,
+        "brems_mGy": 0.1467165359462956,
+        "total_mGy": 0.20175292642876963
+      },
+      "inbound": {
+        "proton_mGy": 0.002196483612953189,
+        "brems_mGy": 0.1835884350948003,
+        "total_mGy": 0.1857849187077535
+      },
+      "both": 0.3875378451365231
+    }
+  },
+  "belt_dose_solar_min_7p5_mGy": 0.488028999023961,
+  "gcr_mGy": {
+    "central": 1.9536,
+    "band": [
+      1.3024000000000002,
+      3.9072
+    ],
+    "rate_mGy_per_day": 0.24
+  },
+  "mission_total_mGy": {
+    "3.0": 2.6220105894419383,
+    "7.5": 2.4255331576787467,
+    "15.0": 2.3411378451365232
+  },
+  "mission_band_mGy": [
+    1.6899378451365235,
+    4.575610589441938
+  ],
+  "measured": {
+    "apollo11_mGy": 1.8,
+    "apollo_range_mGy": [
+      1.6,
+      11.4
+    ],
+    "artemis1_helga_skin_mGy": 11.45,
+    "artemis1_belts_mGy": 2.07,
+    "artemis1_days": 25.5
+  },
+  "thresholds_mGy": {
+    "clinical_mGy": 100.0,
+    "ars_mGy": 1000.0,
+    "ld50_mGy": 4500.0
+  },
+  "worst_case_equatorial_crossing_mGy": 24.92051001287985,
+  "core_loiter_L1p5": {
+    "rate_mGy_per_h_behind_7p5": 87.03350820577164,
+    "rate_mGy_per_h_behind_0p3_skin": 3034.4363141786157,
+    "hours_to_LD50_behind_7p5": 51.70422395660229
+  },
+  "spe_aug1972_mGy": {
+    "in_CM_7p5_king": 2850.5570820483013,
+    "in_CM_7p5_measured_anchor": 1804.1500519293531,
+    "suit_0p3_king": 66981.78372023028
+  }
+}
