@@ -1,0 +1,181 @@
+{
+  "claim": 7,
+  "title": "The C prop rock",
+  "verdict": "refuted",
+  "headline": "The 'C' on the Apollo 16 rock is absent from every scan of the original flight film and from three independent print scans; it exists only in one print generation, where a high-resolution re-scan resolves it as a ~0.9 mm curled fiber (with a visible tail and a second hair in the same crop) lying on top of the film grain.",
+  "impressive": "Seven independently archived generations of the same frame \u2014 from a 14,160-pixel scan of the original flight film down to the hoax sites' own crop \u2014 registered to one another at sub-pixel accuracy with SIFT + RANSAC (up to 4,405 inliers), so the identical 3 x 2 mm patch of rock can be compared pixel-for-pixel across 30 years of duplication history.",
+  "c_location_ref_px": [
+    1054.2572402044293,
+    2867.768313458262
+  ],
+  "c_size_mm_at_film_scale": [
+    1.03,
+    0.86
+  ],
+  "generations": {
+    "mttm_full": {
+      "archive": "March to the Moon (NASA JSC / ASU), scan of ORIGINAL flight film, full res",
+      "kind": "film",
+      "url": "https://tothemoon.im-ldi.com/data_a70/AS16/processed/AS16-107-17446.png",
+      "registration": "coarse 4639 inliers, refined 4405 inliers",
+      "c_contrast_pct": 2.19,
+      "c_zscore": 0.45,
+      "arc_coherence": 0.17,
+      "verdict": "no C"
+    },
+    "mttm_med": {
+      "archive": "March to the Moon (NASA JSC / ASU), scan of ORIGINAL flight film",
+      "kind": "film",
+      "url": "https://tothemoon.im-ldi.com/data_a70/AS16/extra/AS16-107-17446.med.png",
+      "registration": "coarse 4718 inliers, refined 3185 inliers",
+      "c_contrast_pct": 2.16,
+      "c_zscore": 0.48,
+      "arc_coherence": 0.16,
+      "verdict": "no C"
+    },
+    "paa": {
+      "archive": "Project Apollo Archive (JSC 2004 film scans) via Wikimedia Commons mirror of Flickr original",
+      "kind": "film",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/29/AS16-107-17446_%2821651763756%29.jpg",
+      "registration": "reference frame (identity)",
+      "c_contrast_pct": 1.32,
+      "c_zscore": 0.49,
+      "arc_coherence": 0.08,
+      "verdict": "no C"
+    },
+    "grin": {
+      "archive": "NASA GRIN (Great Images in NASA) GPN-2000-001123, scan of a print, via Commons mirror",
+      "kind": "print",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Duke_on_the_Descartes_-_GPN-2000-001123.jpg",
+      "registration": "coarse 4874 inliers, refined 1300 inliers",
+      "c_contrast_pct": 4.03,
+      "c_zscore": 0.39,
+      "arc_coherence": 0.33,
+      "verdict": "no C"
+    },
+    "sf2002": {
+      "archive": "NASA JSC spaceflight.nasa.gov gallery hires, Wayback capture 2002-11-16",
+      "kind": "print",
+      "url": "http://web.archive.org/web/20021116111956im_/http://spaceflight.nasa.gov:80/gallery/images/apollo/apollo16/hires/as16-107-17446.jpg",
+      "registration": "coarse 6397 inliers, refined 2084 inliers",
+      "c_contrast_pct": 2.58,
+      "c_zscore": 0.41,
+      "arc_coherence": 0.22,
+      "verdict": "no C"
+    },
+    "jsc90s": {
+      "archive": "JSC Digital Image Collection lores (early-1990s digitization, 'Image Alchemy v1.6.2'), Wayback 2005-12-17",
+      "kind": "print",
+      "url": "http://web.archive.org/web/20051217225605im_/http://images.jsc.nasa.gov:80/lores/AS16-107-17446.jpg",
+      "registration": "coarse 463 inliers (refine had 10 \u2014 used coarse fit)",
+      "c_contrast_pct": 13.63,
+      "c_zscore": 1.28,
+      "arc_coherence": 0.65,
+      "verdict": "unresolved smudge"
+    },
+    "lpi450": {
+      "archive": "LPI Apollo Image Atlas browse scan (450 px), unchanged since at least 2013",
+      "kind": "print",
+      "url": "https://www.lpi.usra.edu/resources/apollo/images/browse/AS16/107/17446.jpg",
+      "registration": "coarse 402 inliers (refine had 6 \u2014 used coarse fit)",
+      "c_contrast_pct": 0.29,
+      "c_zscore": 0.09,
+      "arc_coherence": 0.0,
+      "verdict": "below resolution"
+    },
+    "classic": {
+      "archive": "Wikimedia Commons 'Apollo16CRock.jpg' \u2014 'Close up from some prints of AS16-107-17446'; the crop circulated by hoax proponents",
+      "kind": "c-print",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Apollo16CRock.jpg",
+      "registration": "direct SIFT, 295 inliers",
+      "c_contrast_pct": 15.46,
+      "c_zscore": 3.61,
+      "arc_coherence": 0.99,
+      "verdict": "C PRESENT"
+    },
+    "aulis": {
+      "archive": "Aulis.com annotated crop (hoax-proponent source), via moonhoaxdebunked.blogspot.com fig 5.15-1",
+      "kind": "c-print",
+      "url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiQ3qzQxppwhramhgVUN6yW0ZJaLC1OvpBfoFSDJTtva9fQmBiu9N71TDH7nTvmdDwidkXHsWqQDXY9evBgYTNVxbUXimPuaJkxBD8t30SQAQjcG25xyQGAG7fkMmh7h5da030bAq3OQ5Zf/s1600/f0541.png",
+      "registration": "direct SIFT, 51 inliers",
+      "c_contrast_pct": 38.67,
+      "c_zscore": 2.56,
+      "arc_coherence": 0.99,
+      "verdict": "C PRESENT"
+    },
+    "lpihair": {
+      "archive": "LPI high-resolution re-scan of the C-bearing print (supplied by LPI to debunk researchers), via moonhoaxdebunked.blogspot.com fig 5.15-3",
+      "kind": "c-print",
+      "url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhXqDBX7bhwW0LRyMx957bmVn1moaRzaECljHJmAO3zZC0mKJHXdCaMz1cA16mTOc6GB0y-K08Vb_yw3wahVZpzIU_WbJ2gCbihv9TNaBBOye8hGKZ-Nf6Tqg5pHf2dUemQmNefbNfuzM4x/s1600/f0543.png",
+      "registration": "NCC template match to classic crop: r=0.923 at scale 0.140",
+      "c_contrast_pct": 13.5,
+      "c_zscore": 2.96,
+      "arc_coherence": 0.76,
+      "verdict": "C PRESENT"
+    }
+  },
+  "cross_sections": {
+    "classic": {
+      "deepest_dip_pct": 21.75844872442441,
+      "fwhm_ref_px": 6.02510460251046,
+      "fwhm_mm_film": 0.07937263548217371
+    },
+    "aulis": {
+      "deepest_dip_pct": 50.337020874023445,
+      "fwhm_ref_px": 7.531380753138073,
+      "fwhm_mm_film": 0.09921579435271713
+    },
+    "lpihair": {
+      "deepest_dip_pct": 29.945360948739584,
+      "fwhm_ref_px": 4.01673640167364,
+      "fwhm_mm_film": 0.05291509032144915
+    },
+    "paa": {
+      "deepest_dip_pct": 1.8268585205078125,
+      "fwhm_ref_px": 4.518828451882847,
+      "fwhm_mm_film": 0.059529476611630314
+    },
+    "mttm_full": {
+      "deepest_dip_pct": 4.043377076850017,
+      "fwhm_ref_px": 5.523012552301253,
+      "fwhm_mm_film": 0.07275824919199256
+    },
+    "grin": {
+      "deepest_dip_pct": 14.592860618863654,
+      "fwhm_ref_px": 3.0125523012552406,
+      "fwhm_mm_film": 0.039686317741087
+    },
+    "sf2002": {
+      "deepest_dip_pct": 6.3236846923828125,
+      "fwhm_ref_px": 3.0125523012552406,
+      "fwhm_mm_film": 0.039686317741087
+    }
+  },
+  "difference_maps": {
+    "classic": {
+      "ssim": 0.9009362076980983,
+      "mean_absdiff_at_C": 14.690681496433724,
+      "mean_absdiff_elsewhere": 2.611091515957635
+    },
+    "grin": {
+      "ssim": 0.8855585415874883,
+      "mean_absdiff_at_C": 2.730732119713313,
+      "mean_absdiff_elsewhere": 3.0206382022847342
+    }
+  },
+  "fiber": {
+    "lab_b_fiber": 134.7,
+    "lab_b_rock": 129.2,
+    "lab_a_fiber": 127.7,
+    "lab_a_rock": 127.9,
+    "stroke_contrast_pct_highres": 13.1,
+    "corr_stroke_vs_underlying_background": -0.01,
+    "random_mask_contrast_on_film_max_pct": 4.11,
+    "n_random_masks": 400
+  },
+  "film_generations_checked": [
+    "mttm_full",
+    "mttm_med",
+    "paa"
+  ]
+}
