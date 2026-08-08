@@ -48,17 +48,17 @@ My favorite finding in the whole project: "they'd all be dead by now, someone wo
 
 **The part I actually care about**
 
-I didn't do months of research here. I described the twelve experiments, each with its falsification criterion, and set AI agents loose on the implementation: photogrammetry, audio signal processing, radiation transport, film forensics, an agent-based secrecy model, a flight-software build chain. All twelve pipelines ran in about a day, and each documented its data sources, its error bars, and its failures. (There were failures. One pipeline discovered mid-analysis that the hammer slides down a small mound after landing, and had to handle it. The Moon does not care about your code.)
+I didn't do months of research here. I described the twelve experiments, each with its falsification criterion, and set agents loose on the implementation: photogrammetry, audio signal processing, radiation transport, film forensics, an agent-based secrecy model, a flight-software build chain. All twelve pipelines ran in about a day, and each documented its data sources, its error bars, and its failures. (There were failures. One pipeline discovered mid-analysis that the hammer slides down a small mound after landing, and had to handle it. The Moon does not care about your code.)
 
 That's the real story for me: falsifiable questions are now cheap. The gap between "someone should check that" and "checked, with error bars, here's the repo" used to be a grant proposal. Now it's a weekend.
 
-Oh, and the scorecard? Hoax 0, Moon 12.
+Oh, and the scorecard? Like it or not, Hoax 0, Moon 12.
 
 Everything is public and reproducible:
 
-* The code and data: github.com/theryanbyrd/apollo-forensics
-* The interactive site, including a live replay of Apollo 11 running on the real guidance computer's timeline, DSKY and all (try keying VERB 16 NOUN 65): apollo-forensics.vercel.app
+* The code and data: https://github.com/theryanbyrd/apollo-forensics
+* The interactive site, including a live replay of Apollo 11 running on the real guidance computer's timeline, DSKY and all (try keying VERB 16 NOUN 65): https://apollo-forensics.vercel.app
 
 The moon landing survived code review. Approved. Merging to history.
 
-So, what should I put through review next? JFK? Area 51? Whether birds are real? Drop your favorite conspiracy below. If it can be tested in software, it can be tested in a weekend.
+So, what should I put through review next? JFK? Area 51? Whether dinosaurs are real? Drop your favorite conspiracy below. If it can be tested in software, it can be tested in a weekend.
