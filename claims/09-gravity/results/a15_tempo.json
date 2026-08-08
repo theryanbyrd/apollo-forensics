@@ -1,0 +1,24 @@
+{
+  "monologue": {
+    "syllables": 144,
+    "words": 106,
+    "clip_window_s": [
+      1.94,
+      37.61
+    ],
+    "gross_duration_s": 35.67,
+    "voiced_time_est_s": 21.27,
+    "syl_rate_gross_incl_pauses": 4.04,
+    "syl_rate_articulation_upper_bound": 6.77
+  },
+  "hoax_implication": {
+    "slowdown_factor": 2.46,
+    "implied_real_rate_gross": 9.93,
+    "implied_real_rate_active": 16.65,
+    "normal_conversational_range": [
+      3.5,
+      5.5
+    ],
+    "note": "GET timestamps (167:22:06-167:22:43, ~37 s) match the measured clip duration 1:1, so the audio (and the PTS-locked video) is running at true broadcast rate."
+  }
+}

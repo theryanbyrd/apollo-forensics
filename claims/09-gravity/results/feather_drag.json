@@ -1,0 +1,48 @@
+{
+  "drop_height_m": 1.3,
+  "slowdown_factor": 2.46,
+  "observed_fall_time_bracket_s": [
+    0.68,
+    1.55
+  ],
+  "observed_apparent_impact_speed_m_s": [
+    2.35,
+    0.48
+  ],
+  "scenarios": {
+    "moon_vacuum": {
+      "real_fall_time_s": 1.27,
+      "as_seen_at_2.46x_slowdown_s": 3.12,
+      "real_impact_speed_m_s": 2.05,
+      "apparent_impact_speed_in_slowed_footage_m_s": 0.83
+    },
+    "earth_vacuum": {
+      "real_fall_time_s": 0.51,
+      "as_seen_at_2.46x_slowdown_s": 1.27,
+      "real_impact_speed_m_s": 5.05,
+      "apparent_impact_speed_in_slowed_footage_m_s": 2.05
+    },
+    "earth_air_vt0.8": {
+      "real_fall_time_s": 1.68,
+      "as_seen_at_2.46x_slowdown_s": 4.14,
+      "real_impact_speed_m_s": 0.8,
+      "apparent_impact_speed_in_slowed_footage_m_s": 0.33
+    },
+    "earth_air_vt1.1": {
+      "real_fall_time_s": 1.26,
+      "as_seen_at_2.46x_slowdown_s": 3.1,
+      "real_impact_speed_m_s": 1.1,
+      "apparent_impact_speed_in_slowed_footage_m_s": 0.45
+    },
+    "earth_air_vt1.5": {
+      "real_fall_time_s": 0.97,
+      "as_seen_at_2.46x_slowdown_s": 2.39,
+      "real_impact_speed_m_s": 1.5,
+      "apparent_impact_speed_in_slowed_footage_m_s": 0.61
+    }
+  },
+  "verdict_notes": [
+    "A feather in Earth air is terminal-velocity limited: its apparent impact speed in 2.46x-slowed footage could not exceed 0.61 m/s (vt=1.5), yet the tracked feather hits at 2.35 +/- 0.48 m/s while still accelerating.",
+    "In 2.46x-slowed Earth-air footage the feather would take 3.1 s of screen time to fall and would lag the hammer by ~2.5 s of screen time; observed hammer-feather landing gap is 0.20 +/- 0.07 s (0.07 s after terrain-elevation correction)."
+  ]
+}

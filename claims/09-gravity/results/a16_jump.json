@@ -1,0 +1,34 @@
+{
+  "scale_px_per_m": 64.9,
+  "jump1": {
+    "flight_window": [
+      240,
+      279
+    ],
+    "g_apparent_m_s2": 1.94,
+    "g_err_m_s2": 0.13,
+    "hang_time_s": 1.4,
+    "push_off_s": 0.3,
+    "push_off_under_hoax_s": 0.122,
+    "crouch_frame": 226,
+    "liftoff_frame": 235
+  },
+  "jump2": {
+    "flight_window": [
+      336,
+      366
+    ],
+    "g_apparent_m_s2": 2.03,
+    "g_err_m_s2": 0.15,
+    "hang_time_s": 1.43,
+    "push_off_s": 0.23,
+    "push_off_under_hoax_s": 0.095,
+    "crouch_frame": 320,
+    "liftoff_frame": 327
+  },
+  "combined_g_m_s2": [
+    1.98,
+    0.1
+  ],
+  "note": "Helmet-top parabola includes body-pose change near takeoff/landing; flight windows are trimmed to the airborne phase. Under the hoax the real push-off would be ~0.1 s - beyond human capability in a 90 kg suit."
+}
