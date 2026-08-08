@@ -1,6 +1,6 @@
 "use client";
 
-// The DSKY (Display & Keyboard) — the astronauts' interface to the AGC.
+// The DSKY (Display & Keyboard), the astronauts' interface to the AGC.
 // Layout mirrors the flight unit: caution/status annunciators on the left,
 // COMP ACTY + PROG / VERB / NOUN + three signed 5-digit registers on the right,
 // 19-key keyboard below. Digits render in DSEG7 (EL-segment style).
@@ -97,7 +97,7 @@ export default function DSKY({
         </div>
 
         {/* EL display panel */}
-        <div className="flex-1 rounded-md border border-neutral-700 bg-black p-3">
+        <div className="flex-1 rounded-md border border-neutral-700 bg-[#050807] p-3">
           <div className="flex items-start justify-between">
             <div
               className={`flex h-10 w-16 items-center justify-center rounded-sm text-[10px] font-bold tracking-widest ${

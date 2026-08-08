@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight, GithubLogo, MoonStars, Waveform } from "@phosphor-icons/react/dist/ssr";
 import claims from "@/data/claims.json";
+import Reveal from "@/components/Reveal";
 
 type Claim = {
   num: number;
@@ -18,106 +20,156 @@ type Claim = {
 };
 
 const REPO = "https://github.com/theryanbyrd/apollo-forensics";
+const FEATURED = new Set([22, 15]);
+
+function ClaimCard({ c, featured }: { c: Claim; featured: boolean }) {
+  return (
+    <article
+      id={`claim-${c.num}`}
+      className={`group flex flex-col overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900/40 transition-colors hover:border-neutral-600 ${
+        featured ? "sm:col-span-2" : ""
+      }`}
+    >
+      <div className={`relative overflow-hidden bg-neutral-950 ${featured ? "aspect-[2/1]" : "aspect-[16/10]"}`}>
+        <Image
+          src={`/figures/${c.figure}`}
+          alt={c.figureAlt}
+          fill
+          sizes={featured ? "(max-width: 640px) 100vw, 66vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+        />
+        <span
+          className={`absolute left-3 top-3 rounded-md px-2 py-0.5 text-[10px] font-bold tracking-widest ${
+            c.verdict === "REFUTED" ? "bg-red-500/90 text-white" : "bg-el/90 text-neutral-950"
+          }`}
+        >
+          {c.verdict}
+        </span>
+      </div>
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-lg font-bold leading-snug">{c.title}</h2>
+          <span className="dseg ml-3 shrink-0 text-sm text-neutral-600">{String(c.num).padStart(2, "0")}</span>
+        </div>
+        <p className="mt-2 text-sm italic leading-relaxed text-neutral-400">&ldquo;{c.claim}&rdquo;</p>
+        <p className="mt-3 rounded-lg border border-el/15 bg-el/5 p-3 text-sm font-medium leading-relaxed text-neutral-100">
+          {c.headline}
+        </p>
+        <details className="mt-3 text-sm text-neutral-300">
+          <summary className="cursor-pointer list-none font-semibold text-neutral-400 transition-colors hover:text-neutral-100">
+            How it could have failed
+          </summary>
+          <p className="mt-2 leading-relaxed">{c.detail}</p>
+          <p className="mt-2 leading-relaxed">
+            <span className="font-semibold text-neutral-100">Falsification criterion:</span> {c.falsification}
+          </p>
+        </details>
+        <div className="mt-auto pt-4">
+          <a
+            href={`${REPO}/tree/main/${c.repoPath}`}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-el underline-offset-4 hover:underline"
+          >
+            Code, data &amp; full writeup
+            <ArrowRight size={14} weight="bold" aria-hidden />
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export default function Home() {
   const items = claims as Claim[];
+  const ordered = [...items.filter((c) => FEATURED.has(c.num)), ...items.filter((c) => !FEATURED.has(c.num))];
   return (
-    <main className="mx-auto max-w-6xl px-4 py-12">
-      <header className="mx-auto max-w-3xl text-center">
-        <p className="text-[11px] uppercase tracking-[0.3em] text-el/70">Apollo Forensics</p>
-        <h1 className="mt-3 text-4xl font-bold leading-tight sm:text-5xl">
-          12 hoax claims. 12 falsifiable tests. <span className="text-el">Zero survived.</span>
-        </h1>
-        <p className="mt-4 text-base leading-relaxed opacity-80">
-          Every moon-landing hoax claim that can be tested purely in software — tested. Real public data, explicit
-          falsification criteria, verdicts from the numbers. A test that can&apos;t fail isn&apos;t a test: every
-          experiment below could have come out for the conspiracy. None did.
-        </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/mission"
-            className="rounded-md bg-el px-4 py-2 text-sm font-bold text-black transition-transform hover:scale-105"
-          >
-            ☾ Replay Apollo 11 on the real computer
-          </Link>
-          <a
-            href={REPO}
-            className="rounded-md border border-neutral-600 px-4 py-2 text-sm font-semibold opacity-90 hover:border-neutral-400"
-          >
-            All code &amp; data on GitHub →
-          </a>
+    <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+      {/* asymmetric split hero: copy left, real evidence artifact right */}
+      <header className="grid items-center gap-10 lg:grid-cols-12">
+        <div className="lg:col-span-7">
+          <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-el/80">Apollo Forensics</p>
+          <h1 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+            12 hoax claims.
+            <br />
+            12 falsifiable tests.
+            <br />
+            <span className="text-el">Zero survived.</span>
+          </h1>
+          <p className="mt-5 max-w-[46ch] text-base leading-relaxed text-neutral-300">
+            Every moon-landing hoax claim testable in software, tested on public data. Each test could have vindicated
+            the hoax. None did.
+          </p>
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <Link
+              href="/mission"
+              className="inline-flex items-center gap-2 rounded-lg bg-el px-4 py-2.5 text-sm font-bold text-neutral-950 transition-transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
+            >
+              <MoonStars size={16} weight="fill" aria-hidden />
+              Replay Apollo 11 on the real computer
+            </Link>
+            <a
+              href={REPO}
+              className="inline-flex items-center gap-2 rounded-lg border border-neutral-700 px-4 py-2.5 text-sm font-semibold text-neutral-200 transition-colors hover:border-neutral-500 active:scale-[0.98]"
+            >
+              <GithubLogo size={16} aria-hidden />
+              Code &amp; data on GitHub
+            </a>
+          </div>
         </div>
+        <figure className="lg:col-span-5">
+          <div className="overflow-hidden rounded-xl border border-neutral-800">
+            {/* animated blink comparison from claim 4: real evidence, not decoration */}
+            <Image
+              src="/figures/04-backdrop-parallax.gif"
+              alt="Two Apollo 15 photographs aligned and alternating: the same distant mountains with the Lunar Module present in one frame and absent in the other."
+              width={800}
+              height={533}
+              unoptimized
+              priority
+              className="w-full"
+            />
+          </div>
+          <figcaption className="mt-2 text-xs leading-relaxed text-neutral-500">
+            The famous &ldquo;identical background&rdquo; pair, aligned and blinking. The mountain is real terrain
+            measured at 10-34 km away in <a className="underline hover:text-neutral-300" href="#claim-4">claim #4</a>.
+          </figcaption>
+        </figure>
       </header>
 
-      <section className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((c) => (
-          <article
-            key={c.num}
-            id={`claim-${c.num}`}
-            className="group flex flex-col overflow-hidden rounded-lg border border-neutral-700/60 bg-neutral-900/40 transition-colors hover:border-neutral-500"
-          >
-            <div className="relative aspect-[16/10] overflow-hidden bg-black">
-              <Image
-                src={`/figures/${c.figure}`}
-                alt={c.figureAlt}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <span
-                className={`absolute left-3 top-3 rounded px-2 py-0.5 text-[10px] font-bold tracking-widest ${
-                  c.verdict === "REFUTED" ? "bg-red-500/90 text-white" : "bg-el/90 text-black"
-                }`}
-              >
-                {c.verdict}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col p-4">
-              <div className="text-[10px] uppercase tracking-widest opacity-50">Claim #{c.num}</div>
-              <h2 className="mt-1 text-lg font-bold leading-snug">{c.title}</h2>
-              <p className="mt-2 text-sm italic opacity-70">“{c.claim}”</p>
-              <p className="mt-3 text-sm leading-relaxed opacity-90">{c.test}</p>
-              <p className="mt-3 rounded-md border border-el/20 bg-el/5 p-3 text-sm font-medium leading-relaxed">
-                {c.headline}
-              </p>
-              <details className="mt-3 text-sm opacity-80">
-                <summary className="cursor-pointer text-xs uppercase tracking-widest opacity-60 hover:opacity-100">
-                  Detail &amp; how it could have failed
-                </summary>
-                <p className="mt-2 leading-relaxed">{c.detail}</p>
-                <p className="mt-2 leading-relaxed">
-                  <span className="font-semibold">Falsification criterion:</span> {c.falsification}
-                </p>
-              </details>
-              <div className="mt-auto pt-4">
-                <a
-                  href={`${REPO}/tree/main/${c.repoPath}`}
-                  className="text-sm font-semibold text-el underline-offset-4 hover:underline"
-                >
-                  Code, data &amp; full writeup →
-                </a>
-              </div>
-            </div>
-          </article>
+      {/* the evidence grid: featured pair first, then the rest */}
+      <section className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label="The twelve claims">
+        {ordered.map((c, i) => (
+          <Reveal key={c.num} delay={Math.min(i * 0.04, 0.3)} className={FEATURED.has(c.num) ? "sm:col-span-2 flex" : "flex"}>
+            <ClaimCard c={c} featured={FEATURED.has(c.num)} />
+          </Reveal>
         ))}
       </section>
 
-      <section className="mx-auto mt-16 max-w-3xl rounded-lg border border-neutral-700/60 bg-neutral-900/40 p-6 text-center">
-        <h2 className="text-xl font-bold">Hear the Moon answer back</h2>
-        <p className="mt-2 text-sm leading-relaxed opacity-80">
-          From claim #22: CapCom&apos;s voice, leaking through the astronauts&apos; headsets, returns to Houston{" "}
-          <span className="font-semibold text-el">2.644 ± 0.035 seconds</span> after he speaks — the Earth–Moon
-          round-trip at the speed of light, measured across 43 transmissions in the EVA tape.
-        </p>
-        <audio controls preload="none" src="/figures/echo_example.wav" className="mx-auto mt-4 w-full max-w-md" />
+      {/* the audible one */}
+      <section className="mx-auto mt-20 max-w-3xl">
+        <Reveal>
+          <div className="rounded-xl border border-el/20 bg-el/5 p-6 sm:p-8">
+            <div className="flex items-center gap-2 text-el">
+              <Waveform size={20} aria-hidden />
+              <h2 className="text-xl font-bold text-neutral-50">Hear the Moon answer back</h2>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-neutral-300">
+              From claim #22: CapCom&apos;s voice, leaking through the astronauts&apos; headsets, returns to Houston{" "}
+              <span className="font-semibold text-el">2.644 ± 0.035 seconds</span> after he speaks. That is the
+              Earth-Moon round trip at the speed of light, measured across 43 transmissions in the EVA tape.
+            </p>
+            <audio controls preload="none" src="/figures/echo_example.wav" className="mt-5 w-full" />
+          </div>
+        </Reveal>
       </section>
 
-      <footer className="mt-16 text-center text-xs opacity-60">
+      <footer className="mt-20 border-t border-neutral-800 py-8 text-center text-xs leading-relaxed text-neutral-500">
         <p>
-          Built with Claude Code · methodology from “The Moon Landing Verification Playbook” ·{" "}
-          <a className="underline" href={REPO}>
-            github.com/theryanbyrd/apollo-forensics
+          Built with Claude Code. Methodology from &ldquo;The Moon Landing Verification Playbook.&rdquo; Everything
+          reproducible from{" "}
+          <a className="underline hover:text-neutral-300" href={REPO}>
+            the public repo
           </a>
+          .
         </p>
       </footer>
     </main>

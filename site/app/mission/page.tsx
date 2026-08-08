@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { CaretLeft, CaretRight, MoonStars, Pause, Play, Gauge } from "@phosphor-icons/react";
 import DSKY from "@/components/DSKY";
 import TrajectoryMap from "@/components/TrajectoryMap";
 import {
@@ -31,7 +32,7 @@ export default function MissionPage() {
   const [descentSpeed, setDescentSpeed] = useState(8);
   const [compActy, setCompActy] = useState(false);
 
-  // —— user DSKY entry state
+  // -- user DSKY entry state
   const [buffer, setBuffer] = useState<string>(""); // e.g. "V16N65"
   const [entryMode, setEntryMode] = useState<null | "verb" | "noun">(null);
   const [userMonitor, setUserMonitor] = useState<null | { verb: string; noun: string }>(null);
@@ -81,8 +82,13 @@ export default function MissionPage() {
     };
   }, [play, get]);
 
-  // COMP ACTY flicker — busier during descent
+  // COMP ACTY flicker, busier during descent. Under prefers-reduced-motion the
+  // lamp holds steady-on during descent (state, not animation) instead of flickering.
   useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setCompActy(inDescent(get));
+      return;
+    }
     const id = setInterval(
       () => setCompActy((c) => (Math.random() < (inDescent(get) ? 0.65 : 0.25) ? !c : c)),
       280
@@ -95,7 +101,7 @@ export default function MissionPage() {
   const wall = fmtWallClock(get);
   const descent = inDescent(get) ? descentState(get) : null;
 
-  // —— scripted DSKY state for "now"
+  // -- scripted DSKY state for "now"
   const scripted: DskyState = useMemo(() => {
     if (descent) {
       if (descent.alarm) {
@@ -142,7 +148,7 @@ export default function MissionPage() {
     return ev.dsky;
   }, [descent, ev]);
 
-  // —— user monitor displays override the scripted state
+  // -- user monitor displays override the scripted state
   const displayed: DskyState = useMemo(() => {
     const lights = [...(scripted.lights ?? [])];
     if (oprErr) lights.push("OPR ERR");
@@ -286,7 +292,7 @@ export default function MissionPage() {
         <div>
           <h1 className="text-2xl font-bold">Apollo 11, as the computer flew it</h1>
           <p className="mt-1 max-w-2xl text-sm opacity-70">
-            Scrub the eight-day mission and watch what the Apollo Guidance Computer was running at every moment —
+            Scrub the eight-day mission and watch what the Apollo Guidance Computer was running at every moment:
             the same Luminary 099 / Colossus 2A software we reassembled bit-for-bit and ran in{" "}
             <Link href="/#claim-15" className="underline">
               claim&nbsp;#15
@@ -311,17 +317,17 @@ export default function MissionPage() {
           <div className="opacity-60">{wall.utc}</div>
         </div>
         <div className="ml-auto flex flex-wrap items-center gap-2">
-          <button onClick={() => jump(Math.max(0, evIdx - 1))} className="btn-ctl" aria-label="Previous event">
-            ‹ Prev
+          <button onClick={() => jump(Math.max(0, evIdx - 1))} className="btn-ctl inline-flex items-center gap-1.5" aria-label="Previous event">
+            <CaretLeft size={14} weight="bold" aria-hidden /> Prev
           </button>
-          <button onClick={() => jump(Math.min(EVENTS.length - 1, evIdx + 1))} className="btn-ctl" aria-label="Next event">
-            Next ›
+          <button onClick={() => jump(Math.min(EVENTS.length - 1, evIdx + 1))} className="btn-ctl inline-flex items-center gap-1.5" aria-label="Next event">
+            Next <CaretRight size={14} weight="bold" aria-hidden />
           </button>
           <button
             onClick={() => setPlay(play === "tour" ? null : "tour")}
-            className={`btn-ctl ${play === "tour" ? "border-el text-el" : ""}`}
+            className={`btn-ctl inline-flex items-center gap-1.5 ${play === "tour" ? "border-el text-el" : ""}`}
           >
-            {play === "tour" ? "■ Stop tour" : "▶ Tour the mission"}
+            {play === "tour" ? <><Pause size={14} weight="fill" aria-hidden /> Stop tour</> : <><Play size={14} weight="fill" aria-hidden /> Tour the mission</>}
           </button>
           <button
             onClick={() => {
@@ -331,13 +337,13 @@ export default function MissionPage() {
                 setPlay("descent");
               }
             }}
-            className={`btn-ctl ${play === "descent" ? "border-amber-400 text-amber-300" : "border-amber-500/60 text-amber-200"}`}
+            className={`btn-ctl inline-flex items-center gap-1.5 ${play === "descent" ? "border-amber-400 text-amber-300" : "border-amber-500/60 text-amber-200"}`}
           >
-            {play === "descent" ? "■ Stop descent" : "☾ Fly the landing"}
+            {play === "descent" ? <><Pause size={14} weight="fill" aria-hidden /> Stop descent</> : <><MoonStars size={14} weight="fill" aria-hidden /> Fly the landing</>}
           </button>
           {play === "descent" && (
-            <button onClick={() => setDescentSpeed((s) => (s === 8 ? 1 : 8))} className="btn-ctl">
-              {descentSpeed === 8 ? "8× → real time" : "1× → 8×"}
+            <button onClick={() => setDescentSpeed((s) => (s === 8 ? 1 : 8))} className="btn-ctl inline-flex items-center gap-1.5">
+              <Gauge size={14} aria-hidden /> {descentSpeed === 8 ? "Slow to real time" : "Back to 8x speed"}
             </button>
           )}
         </div>
@@ -378,9 +384,9 @@ export default function MissionPage() {
               onClick={() => jump(i)}
               className="absolute -translate-x-1/2 hover:text-el"
               style={{ left: `${(e.get / MISSION_END) * 100}%` }}
-              title={`${fmtGET(e.get)} — ${e.title}`}
+              title={`${fmtGET(e.get)} ${e.title}`}
             >
-              ▲
+              <span aria-hidden className="block h-2 w-px bg-current" />
             </button>
           ))}
         </div>
@@ -411,7 +417,7 @@ export default function MissionPage() {
           </div>
           {ev.quote && (
             <blockquote className="mt-3 border-l-2 border-neutral-500 pl-3 text-sm italic opacity-80">
-              “{ev.quote.text}” <span className="not-italic opacity-60">— {ev.quote.who}</span>
+              “{ev.quote.text}” <span className="not-italic opacity-60">{ev.quote.who}</span>
             </blockquote>
           )}
 
@@ -454,7 +460,7 @@ export default function MissionPage() {
       <footer className="mt-8 text-center text-xs opacity-60">
         The flight software in this story is real and public:{" "}
         <a className="underline" href="https://github.com/theryanbyrd/apollo-forensics/tree/main/claims/15-agc">
-          we reassembled and ran it — claim #15
+          we reassembled and ran it in claim #15
         </a>
         .
       </footer>
