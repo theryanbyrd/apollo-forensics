@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRight, MoonStars, Waveform } from "@phosphor-icons/react/dist/ssr";
 import claims from "@/data/claims.json";
 import Reveal from "@/components/Reveal";
+import BlinkComparator from "@/components/BlinkComparator";
 
 type Claim = {
   num: number;
@@ -121,18 +122,7 @@ export default function Home() {
           </dl>
         </div>
         <figure className="lg:col-span-5">
-          <div className="overflow-hidden rounded-xl border border-neutral-800">
-            {/* animated blink comparison from claim 4: real evidence, not decoration */}
-            <Image
-              src="/figures/04-backdrop-parallax.gif"
-              alt="Two Apollo 15 photographs aligned and alternating: the same distant mountains with the Lunar Module present in one frame and absent in the other."
-              width={800}
-              height={533}
-              unoptimized
-              priority
-              className="w-full"
-            />
-          </div>
+          <BlinkComparator />
           <figcaption className="mt-2 text-xs leading-relaxed text-neutral-400">
             The famous &ldquo;identical background&rdquo; pair, aligned and blinking. The mountain is real terrain
             measured at 10-34 km away in <a className="underline hover:text-neutral-300" href="#claim-4">claim #4</a>.

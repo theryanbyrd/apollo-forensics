@@ -32,6 +32,7 @@ export default function Nav() {
           ))}
           <a
             href="https://github.com/theryanbyrd/apollo-forensics"
+            aria-label="Apollo Forensics on GitHub"
             className="flex h-11 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-neutral-400 transition-colors hover:text-neutral-100"
           >
             <GithubLogo size={16} aria-hidden />

@@ -39,26 +39,43 @@ export default function MissionPage() {
   const [oprErr, setOprErr] = useState(false);
   const [lampTest, setLampTest] = useState(false);
   const [pressedKey, setPressedKey] = useState<string | null>(null);
+  // spoken feedback for the keypad: the DSKY conveys everything visually, so
+  // screen-reader users need an explicit announcement of each outcome.
+  const [announce, setAnnounce] = useState("");
 
   const raf = useRef<number | null>(null);
   const lastT = useRef<number | null>(null);
   const tourTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // mission clock during playback lives in a ref so the animation loop does not
+  // depend on `get`; React state is pushed at display granularity, not per frame.
+  const clock = useRef(0);
+  const lastPush = useRef(0);
+  const getRef = useRef(get);
+  useEffect(() => {
+    getRef.current = get;
+  }, [get]);
 
   // animation loop for descent playback
   useEffect(() => {
     if (play !== "descent") return;
+    clock.current = getRef.current;
+    lastPush.current = 0;
     const step = (t: number) => {
       if (lastT.current == null) lastT.current = t;
       const dt = (t - lastT.current) / 1000;
       lastT.current = t;
-      setGet((g) => {
-        const ng = g + dt * descentSpeed;
-        if (ng >= TOUCHDOWN + 8) {
-          setPlay(null);
-          return TOUCHDOWN;
-        }
-        return ng;
-      });
+      clock.current += dt * descentSpeed;
+      if (clock.current >= TOUCHDOWN + 8) {
+        setGet(TOUCHDOWN);
+        setPlay(null);
+        return;
+      }
+      // ~20 Hz: the DSKY registers and GET readout are integer-quantized, so
+      // pushing every animation frame would re-render the page for nothing.
+      if (t - lastPush.current >= 50) {
+        lastPush.current = t;
+        setGet(clock.current);
+      }
       raf.current = requestAnimationFrame(step);
     };
     raf.current = requestAnimationFrame(step);
@@ -82,19 +99,22 @@ export default function MissionPage() {
     };
   }, [play, get]);
 
-  // COMP ACTY flicker, busier during descent. Under prefers-reduced-motion the
-  // lamp holds steady-on during descent (state, not animation) instead of flickering.
+  // COMP ACTY flicker, busier during descent. Keyed on the boolean, not on `get`:
+  // depending on `get` would tear down and rebuild the interval on every playback
+  // frame, so the 280 ms period could never elapse and the lamp would freeze.
+  // Under prefers-reduced-motion the lamp holds steady (state, not animation).
+  const descentActive = inDescent(get);
   useEffect(() => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setCompActy(inDescent(get));
+      setCompActy(descentActive);
       return;
     }
     const id = setInterval(
-      () => setCompActy((c) => (Math.random() < (inDescent(get) ? 0.65 : 0.25) ? !c : c)),
+      () => setCompActy((c) => (Math.random() < (descentActive ? 0.65 : 0.25) ? !c : c)),
       280
     );
     return () => clearInterval(id);
-  }, [get]);
+  }, [descentActive]);
 
   const ev = eventAt(get);
   const phase = phaseAt(get);
@@ -162,6 +182,16 @@ export default function MissionPage() {
         r3: "+88888",
         lights: ["UPLINK", "TEMP", "NO ATT", "GIMBAL", "STBY", "PROG", "KEY REL", "RESTART", "OPR ERR", "TRACKER", "ALT", "VEL"],
       };
+    // entry-in-progress wins over any active monitor: on the real DSKY, pressing
+    // VERB immediately blanks and re-fills the verb window. Checking the monitor
+    // first would make this branch unreachable once a monitor is up, so keying a
+    // second command would produce no feedback at all.
+    if (buffer) {
+      const v = buffer.match(/V(\d{0,2})/)?.[1] ?? scripted.verb;
+      const n = buffer.match(/N(\d{0,2})/)?.[1] ?? "";
+      const base = userMonitor ? { ...scripted, prog: scripted.prog } : scripted;
+      return { ...base, verb: v.padEnd(2, " "), noun: n.padEnd(2, " "), lights };
+    }
     if (userMonitor) {
       const { verb, noun } = userMonitor;
       if (verb === "16" && noun === "65") {
@@ -201,12 +231,6 @@ export default function MissionPage() {
         };
       }
     }
-    // entry-in-progress: show partial verb/noun being keyed
-    if (buffer) {
-      const v = buffer.match(/V(\d{0,2})/)?.[1] ?? scripted.verb;
-      const n = buffer.match(/N(\d{0,2})/)?.[1] ?? "";
-      return { ...scripted, verb: v.padEnd(2, " "), noun: n.padEnd(2, " "), lights };
-    }
     return { ...scripted, lights };
   }, [scripted, userMonitor, oprErr, lampTest, buffer, get, descent]);
 
@@ -217,12 +241,14 @@ export default function MissionPage() {
       if (k === "RSET") {
         setOprErr(false);
         setLampTest(false);
+        setAnnounce("Reset. Error lamps cleared.");
         return;
       }
       if (k === "KEY REL") {
         setBuffer("");
         setEntryMode(null);
         setUserMonitor(null);
+        setAnnounce("Key release. Display returned to the flight program.");
         return;
       }
       if (k === "CLR") {
@@ -258,17 +284,29 @@ export default function MissionPage() {
           // lamp test
           setLampTest(true);
           setTimeout(() => setLampTest(false), 4000);
+          setAnnounce("Verb 35: lamp test. All display lamps lit for four seconds.");
           return;
         }
         if ((v === "16" && (n === "65" || n === "63")) || (v === "05" && n === "09")) {
           if (n === "63" && !descent) {
             setOprErr(true);
+            setAnnounce("Operator error. Noun 63 shows landing data and is only available during powered descent.");
             return;
           }
           setUserMonitor({ verb: v!, noun: n! });
+          setAnnounce(
+            n === "65"
+              ? "Monitoring verb 16 noun 65: mission elapsed time, hours minutes seconds."
+              : n === "63"
+                ? "Monitoring verb 16 noun 63: descent velocity, altitude rate, and altitude."
+                : "Monitoring verb 05 noun 09: the most recent program alarm codes."
+          );
           return;
         }
         setOprErr(true);
+        setAnnounce(
+          v ? `Operator error. Verb ${v}${n ? " noun " + n : ""} is not implemented in this simulation.` : "Operator error. Incomplete entry."
+        );
         return;
       }
       if (k === "PRO" || k === "+" || k === "-") {
@@ -292,8 +330,8 @@ export default function MissionPage() {
         <div>
           <h1 className="text-2xl font-bold">Apollo 11, as the computer flew it</h1>
           <p className="mt-1 max-w-2xl text-sm opacity-70">
-            Scrub the eight-day mission and watch what the Apollo Guidance Computer was running at every moment:
-            the same Luminary 099 / Colossus 2A software we reassembled bit-for-bit and ran in{" "}
+            Scrub the eight-day mission and watch what the Apollo Guidance Computer was running at every moment.
+            The lunar-module program shown here, Luminary 099, is the one we reassembled bit-for-bit and ran in{" "}
             <Link href="/#claim-15" className="underline">
               claim&nbsp;#15
             </Link>
@@ -314,6 +352,23 @@ export default function MissionPage() {
           <div className="opacity-60">{wall.utc}</div>
         </div>
         <div className="ml-auto flex flex-wrap items-center gap-2">
+          {/* Every event is reachable here. The timeline ticks below cluster to
+              about a pixel during descent, so they are markers, not controls. */}
+          <label className="sr-only" htmlFor="event-jump">
+            Jump to mission event
+          </label>
+          <select
+            id="event-jump"
+            value={evIdx}
+            onChange={(e) => jump(Number(e.target.value))}
+            className="btn-ctl max-w-[15rem] truncate"
+          >
+            {EVENTS.map((e, i) => (
+              <option key={i} value={i}>
+                {fmtGET(e.get)} · {e.title}
+              </option>
+            ))}
+          </select>
           <button onClick={() => jump(Math.max(0, evIdx - 1))} className="btn-ctl inline-flex items-center gap-1.5" aria-label="Previous event">
             <CaretLeft size={14} weight="bold" aria-hidden /> Prev
           </button>
@@ -365,7 +420,10 @@ export default function MissionPage() {
           type="range"
           min={0}
           max={MISSION_END}
-          step={10}
+          // 10 min per arrow press: at the old 10 s step, crossing the 8-day
+          // mission by keyboard took ~70,000 presses. Pointer dragging is
+          // unaffected, and the event jump control below gives exact landings.
+          step={600}
           value={get}
           onChange={(e) => {
             setPlay(null);
@@ -373,18 +431,15 @@ export default function MissionPage() {
           }}
           className="mt-[-8px] block w-full cursor-pointer appearance-none bg-transparent"
           aria-label="Mission time scrubber"
+          aria-valuetext={`${fmtGET(get)} ground elapsed time, ${phase.label}`}
         />
-        <div className="relative mt-1 h-4 text-[9px] opacity-60">
+        <div aria-hidden className="relative mt-1 h-3 opacity-60">
           {EVENTS.map((e, i) => (
-            <button
+            <span
               key={i}
-              onClick={() => jump(i)}
-              className="absolute flex h-8 w-6 -translate-x-1/2 items-end justify-center pb-0.5 hover:text-el"
+              className={`absolute block w-px ${e.get === ev.get ? "h-3 bg-el" : "h-2 bg-current"}`}
               style={{ left: `${(e.get / MISSION_END) * 100}%` }}
-              title={`${fmtGET(e.get)} ${e.title}`}
-            >
-              <span aria-hidden className="block h-2 w-px bg-current" />
-            </button>
+            />
           ))}
         </div>
         <div className="mt-1 flex justify-between text-[10px] uppercase tracking-widest opacity-50">
@@ -442,6 +497,11 @@ export default function MissionPage() {
         {/* DSKY */}
         <section>
           <DSKY state={displayed} compActy={compActy} onKey={handleKey} pressedKey={pressedKey} />
+          {/* The DSKY reports everything through lamps and seven-segment digits,
+              so keypad outcomes are announced here for assistive technology. */}
+          <p aria-live="polite" className="sr-only">
+            {announce}
+          </p>
           <p className="mt-2 text-center text-[11px] opacity-50">
             Register values are representative reconstructions from mission documentation; alarms, programs, and event
             times follow the flight record.

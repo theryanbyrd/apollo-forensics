@@ -28,7 +28,7 @@ const LIGHTS: { id: string; label: string }[] = [
 function Seg({ text, className = "" }: { text: string; className?: string }) {
   // render sign+digits in DSEG7; spaces stay blank, "8" ghost behind for EL feel
   return (
-    <span className={`dseg relative inline-block ${className}`}>
+    <span aria-hidden className={`dseg relative inline-block ${className}`}>
       <span aria-hidden className="absolute inset-0 opacity-[0.07] select-none">
         {text.replace(/[+-]/g, "8").replace(/[0-9]/g, "8")}
       </span>
@@ -75,12 +75,20 @@ export default function DSKY({
 
   return (
     <div className="dsky select-none rounded-lg border border-neutral-700 bg-neutral-900 p-4 shadow-2xl">
+      <p className="sr-only">
+        Display: program {state.prog}, verb {state.verb}, noun {state.noun}. Register 1 {state.r1}, register 2{" "}
+        {state.r2}, register 3 {state.r3}.
+      </p>
       <div className="flex gap-4">
         {/* annunciator panel */}
         <div className="grid w-28 sm:w-36 grid-cols-2 content-start gap-1">
           {LIGHTS.map((l) => (
             <div
               key={l.id}
+              role={l.label === "" ? undefined : "status"}
+              aria-label={
+                l.label === "" ? undefined : `${l.label}: ${lightsOn.has(l.id) || lightsOn.has(l.label) ? "lit" : "off"}`
+              }
               className={`flex h-8 items-center justify-center rounded-sm border text-center text-[9px] font-bold leading-tight tracking-wide ${
                 l.label === ""
                   ? "border-neutral-800 bg-neutral-800/50"
@@ -109,18 +117,18 @@ export default function DSKY({
               ACTY
             </div>
             <div className="text-right">
-              <div className="dsky-label">PROG</div>
+              <div aria-hidden className="dsky-label">PROG</div>
               <Seg text={state.prog} className="text-2xl sm:text-3xl text-el" />
             </div>
           </div>
 
           <div className="mt-2 flex justify-between">
             <div>
-              <div className="dsky-label">VERB</div>
+              <div aria-hidden className="dsky-label">VERB</div>
               <Seg text={vnVisible ? state.verb : "  "} className="text-2xl sm:text-3xl text-el" />
             </div>
             <div className="text-right">
-              <div className="dsky-label">NOUN</div>
+              <div aria-hidden className="dsky-label">NOUN</div>
               <Seg text={vnVisible ? state.noun : "  "} className="text-2xl sm:text-3xl text-el" />
             </div>
           </div>
