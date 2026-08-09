@@ -53,7 +53,7 @@ archive.org item (`NASA-Audio-Archive_Digital-Audio-File_Metadata`):
 | Tape | Direct URL | Covers GET | Content |
 |------|-----------|-----------|---------|
 | 173-AAA | [173-AAA.mp3](https://archive.org/download/Apollo11Audio/173-AAA.mp3) (183 MB, 3.18 h) | 102:12–106:17 | lunar landing |
-| 174-AAA | [174-AAA.mp3](https://archive.org/download/Apollo11Audio/174-AAA.mp3) (179 MB, 3.10 h) | 106:17–109:21 | EVA preparation |
+| 174-AAA | [174-AAA.mp3](https://archive.org/download/Apollo11Audio/174-AAA.mp3) (179 MB, 3.05 h) | 106:17–109:21 | EVA preparation |
 | 175-AAA | [175-AAA.mp3](https://archive.org/download/Apollo11Audio/175-AAA.mp3) (129 MB, 2.24 h) | 109:21–111:37 | the EVA itself |
 
 `fetch_audio.py` downloads them into `data/` (gitignored).
