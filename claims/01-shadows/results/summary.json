@@ -2,7 +2,7 @@
   "claim": 1,
   "title": "Non-parallel shadows = studio lights",
   "verdict": "REFUTED",
-  "headline": "In both famous 'non-parallel shadow' frames every shadow line is concurrent at a single vanishing point on the horizon (chi2/dof 1.4 and 1.4) - the signature of one source at infinity - and the down-sun Apollo 11 frame recovers a sun elevation of 15.7\u00b0 \u00b1 1.1\u00b0, matching the JPL Horizons ephemeris value of 15.00\u00b0 to 0.7\u00b0, while any lamp closer than 54 m is excluded at 95% confidence.",
+  "headline": "In both famous 'non-parallel shadow' frames every shadow line is concurrent at a single vanishing point on the horizon (chi2/dof 1.4 and 1.4) - the signature of one source at infinity - and the down-sun Apollo 11 frame recovers a sun elevation of 15.7\u00b0 \u00b1 1.1\u00b0, matching the JPL Horizons ephemeris value of 15.00\u00b0 to 0.7\u00b0, while any lamp closer than 224 m is excluded at 95% confidence.",
   "impressive": "The sun's elevation over Tranquility Base at 1969-07-21 04:43:31 UTC was recovered to 0.7\u00b0 using nothing but hand-digitized shadow endpoints from AS11-40-5961 (including the shadow of Armstrong's own camera, which marks the antisolar point exactly, independent of terrain), the Hasselblad's reseau-plate calibration, and projective geometry - then confirmed against JPL Horizons. No 1969 set designer was simulating astronomically correct vanishing points to sub-degree accuracy.",
   "photos": {
     "a14": {
@@ -66,7 +66,10 @@
           6.789603893317064
         ],
         "implied_source_dist_m_median": null,
-        "implied_dist_m_p05": 9.452538217491012,
+        "implied_dist_m_p05": 11.2597181434737,
+        "implied_dist_m_p05_method": "5th percentile of ALL 800 Monte-Carlo samples, with the samples that converge at or above the horizon ranked as infinite distance; = one-sided 95% lower bound on the source distance",
+        "implied_dist_m_p05_finite_subset_only": 9.452538217491012,
+        "n_mc_samples": 800,
         "frac_mc_convergence_at_or_above_horizon": 0.565
       },
       "delta_aic_lamp_minus_sun": 0.13875686316837488,
@@ -95,11 +98,11 @@
       "n_shadow_lines": 5,
       "n_toptip_lines": 3,
       "sun_fit": {
-        "chi2": 10.885660425832443,
+        "chi2": 10.885660425832445,
         "k": 2,
         "n": 10,
-        "chi2_per_dof": 1.3607075532290553,
-        "aic": 14.885660425832443,
+        "chi2_per_dof": 1.3607075532290556,
+        "aic": 14.885660425832445,
         "elev_deg": 15.768439181575392,
         "elev_deg_mc": [
           15.72119945272042,
@@ -137,10 +140,13 @@
           1.4588276738879624
         ],
         "implied_source_dist_m_median": null,
-        "implied_dist_m_p05": 54.415018184457836,
+        "implied_dist_m_p05": 224.16172076156082,
+        "implied_dist_m_p05_method": "5th percentile of ALL 800 Monte-Carlo samples, with the samples that converge at or above the horizon ranked as infinite distance; = one-sided 95% lower bound on the source distance",
+        "implied_dist_m_p05_finite_subset_only": 54.415018184457836,
+        "n_mc_samples": 800,
         "frac_mc_convergence_at_or_above_horizon": 0.9125
       },
-      "delta_aic_lamp_minus_sun": -0.042965243887993054,
+      "delta_aic_lamp_minus_sun": -0.04296524388799483,
       "ephemeris": {
         "az_deg": 88.842658375,
         "el_deg": 14.997711334999966

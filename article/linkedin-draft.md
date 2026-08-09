@@ -38,7 +38,7 @@ I tracked the Apollo 15 hammer-and-feather drop frame by frame. The feather acce
 
 **Japan checked NASA's homework, 37 years later**
 
-In 2008, Japan's Kaguya orbiter mapped the Moon's terrain with its own stereo cameras. I rendered the horizon a camera should see from the Apollo 15 landing site using only the Japanese elevation data, then overlaid it on the 1971 photographs. The predicted ridgeline rides the photographed skyline across the entire frame: 0.18 degrees RMS, correlation 0.998, at exactly the documented camera direction. A set painter in 1971 would have needed topographic data that wouldn't exist for four more decades.
+In 2008, Japan's Kaguya orbiter mapped the Moon's terrain with its own stereo cameras. I rendered the horizon a camera should see from the Apollo 15 landing site using only the Japanese elevation data, then overlaid it on the 1971 photographs. The predicted ridgeline rides the photographed skyline across the entire frame: 0.017 degrees RMS, correlation 0.99998, at exactly the documented camera direction. That is about one pixel of disagreement on the film scan. A set painter in 1971 would have needed topographic data that wouldn't exist for four more decades.
 
 **And finally, the math that eats the conspiracy alive**
 

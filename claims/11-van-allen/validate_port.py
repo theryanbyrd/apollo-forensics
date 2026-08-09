@@ -17,6 +17,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import aep8_port  # noqa: E402
+import fetch_data  # noqa: E402
 
 RADBELT_PY = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("RADBELT_PYTHON", "")
 
@@ -31,6 +32,7 @@ BGRID = [1.0, 1.1, 1.3, 1.7, 2.5, 4.0, 8.0, 20.0, 50.0]
 
 
 def main():
+    fetch_data.ensure_data()   # data/ is git-ignored; download the AE-8/AP-8 maps if absent
     cases = []
     for model, (particle, solar, energies) in MODELS.items():
         for L in LGRID:

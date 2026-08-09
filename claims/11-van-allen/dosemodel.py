@@ -1,6 +1,6 @@
 """Slab/spherical-shell dose model: NIST PSTAR/ESTAR data, aluminum shield, tissue dose.
 
-Data files (downloaded live from NIST by the accompanying analysis, cached in ./data/):
+Data files (queried live from NIST by fetch_data.py, cached in ./data/):
   data/pstar_aluminum.csv : proton stopping power + CSDA range in Al  (NIST PSTAR, matno 013)
   data/pstar_water.csv    : proton stopping power + CSDA range in liquid water (matno 276)
   data/estar_aluminum.csv : electron collision/radiative stopping powers in Al (NIST ESTAR)

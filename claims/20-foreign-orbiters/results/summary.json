@@ -1,9 +1,9 @@
 {
   "claim": 20,
   "title": "Foreign orbiters verify the terrain",
-  "verdict": "CONFIRMED REAL TERRAIN - backdrop claim falsified. Skylines in two 1971 Apollo 15 surface photographs match the horizon computed from JAXA's 2008 Kaguya/SELENE Terrain Camera DEM to ~0.2 deg RMS, with unique best-fit azimuths exactly at the documented viewing directions.",
-  "headline": "The 2008 Japanese Kaguya DEM reproduces the 1971 Apollo 15 skylines to 0.18-0.21 deg RMS (r = 0.998 / 0.995): AS15-88-11866 locks onto Mons Hadley Delta at azimuth 184.8 deg and AS15-86-11603 onto Mons Hadley at 46.3 deg - both exactly where the mission record says the cameras pointed, on mountains the DEM shows are 17-20 km away and 3.5-4.1 km high.",
-  "impressive": "results/overlay_AS15-88-11866.png - the famous flag-salute photograph with the skyline predicted from the 2008 Japanese orbiter DEM drawn over it: the green curve rides the photographed ridge of Mons Hadley Delta across the whole frame (RMS 0.179 deg, r = 0.9985), passing behind the LM and reappearing on the low ridge beyond the Rover.",
+  "verdict": "CONFIRMED REAL TERRAIN - backdrop claim falsified. Skylines in two 1971 Apollo 15 surface photographs match the horizon computed from JAXA's 2008 Kaguya/SELENE Terrain Camera DEM to 0.017 deg RMS (flag frame) and 0.21 deg (Rover frame), with best-fit azimuths exactly at the documented viewing directions.",
+  "headline": "The 2008 Japanese Kaguya DEM reproduces the 1971 Apollo 15 flag-salute skyline to 0.017 deg RMS - 1.3 pixels on the film scan, across 46 deg of panorama, r = 0.99998 - locking AS15-88-11866 onto Mons Hadley Delta at azimuth 184.2 deg, 45.6x better than the best rival azimuth anywhere else on the 360 deg circle; AS15-86-11603 corroborates at 0.208 deg on Mons Hadley at 46.3 deg. Both land exactly where the mission record says the cameras pointed, on mountains the DEM shows are 17-20 km away and 3.5-4.1 km high.",
+  "impressive": "results/overlay_AS15-88-11866.png - the famous flag-salute photograph with the skyline predicted from the 2008 Japanese orbiter DEM drawn over it: the green curve rides the photographed ridge of Mons Hadley Delta across the whole frame to within 1.3 film pixels (RMS 0.017 deg, r = 0.99998), passing behind the LM and reappearing on the low ridge beyond the Rover.",
   "details": {
     "dem": {
       "agency": "JAXA (Japan)",
@@ -26,9 +26,10 @@
       "mons_hadley_delta": {"summit": [25.5678, 3.7606], "rise_above_site_m": 3518, "bearing_deg": 168.6, "distance_km": 17.5}
     },
     "matches": {
-      "AS15-88-11866": {"skyline": "Mons Hadley Delta", "yaw_deg": 184.78, "rms_deg": 0.179, "pearson_r": 0.9985, "second_best_rms_deg": 1.553, "azimuth_agrees": true},
-      "AS15-86-11603": {"skyline": "Mons Hadley", "yaw_deg": 46.30, "rms_deg": 0.208, "pearson_r": 0.9951, "second_best_rms_deg": 0.649, "azimuth_agrees": true}
+      "AS15-88-11866": {"skyline": "Mons Hadley Delta", "yaw_deg": 184.22, "pitch_deg": -1.04, "roll_deg": 3.03, "rms_deg": 0.0167, "rms_film_px": 1.34, "pearson_r": 0.99998, "second_best_rms_deg": 0.764, "second_best_yaw_deg": 110.7, "rms_contrast": 45.6, "pose_is_interior_minimum": true, "azimuth_agrees": true},
+      "AS15-86-11603": {"skyline": "Mons Hadley", "yaw_deg": 46.30, "pitch_deg": -7.84, "roll_deg": -0.51, "rms_deg": 0.208, "rms_film_px": 16.7, "pearson_r": 0.9951, "second_best_rms_deg": 0.266, "second_best_yaw_deg": 182.5, "rms_contrast": 1.28, "pose_is_interior_minimum": true, "azimuth_agrees": true}
     },
-    "method": "photo skyline pixels -> 3D rays (focal 61.1 mm calibrated, pixel scale from the film's 10 mm reseau grid = 75.2 px/mm); fit only camera yaw/pitch/roll by minimizing RMS vs the DEM-rendered 360-deg horizon (curvature drop d^2/2R included, R = 1737.4 km)"
+    "method": "photo skyline pixels -> 3D rays (focal 61.1 mm calibrated, pixel scale from the film's 10 mm reseau grid = 75.2 px/mm); fit only camera yaw/pitch/roll by minimizing RMS vs the DEM-rendered 360-deg horizon (curvature drop d^2/2R included, R = 1737.4 km). Each refinement box is re-centred until its optimum is interior, so no reported pose is a clipped boundary value; the best rival azimuth (>10 deg away) is refined identically so rms_contrast compares like with like.",
+    "uniqueness_note": "The two frames carry different weight. AS15-88-11866 is decisive: no other azimuth on the circle comes within 45x of its residual. AS15-86-11603 is corroborating only: its best rival (az 182.5 deg) reaches 0.266 deg RMS with r = 0.9955 - a nominally higher correlation than the winning fit - so a 29-deg stretch of ridge does not pin the azimuth on shape alone; what it shows is that the global optimum still falls at the documented direction."
   }
 }

@@ -100,7 +100,11 @@ anchors the sun's elevation with no assumptions about ground slope.
 `run.py` (everything is reproduced by `../../.venv/bin/python run.py`):
 
 1. Downloads the scans and the JPL Horizons ephemerides if absent
-   (cached responses in `data/horizons_*.txt`).
+   (cached responses in `data/horizons_*.txt`). Each download goes to a
+   `.part` file, is checked (the image must fully decode; the ephemeris
+   must contain a parseable `$$SOE` table) and only then renamed into
+   place, so an outage or an HTTP error page can never be cached as if it
+   were data.
 2. Detects the reseau grid → pixel scale + principal point.
 3. Fits both models to the digitized lines:
    - **H_sun** (2 parameters): a vanishing point constrained to the fitted
@@ -144,13 +148,25 @@ must sit *below* the horizon by atan(h/D)):
 
 - **AS11-40-5961**: 91 % of Monte-Carlo solutions put the convergence at
   or above the horizon (i.e., source at infinity); the 95 % lower bound on
-  the implied source distance is **≈ 54 m**. A lamp 5–20 m away (4–16°
+  the implied source distance is **≈ 224 m**. A lamp 5–20 m away (4–16°
   below the horizon) is excluded outright — see
   `results/fig3_montecarlo_source_distance.png`.
 - **AS14-68-9487**: same story but weaker leverage (the vanishing point is
   far outside the frame and the Fra Mauro skyline is rolling ridge
-  terrain, not a sharp horizon): implied source distance ≥ ~9 m at 95 %.
+  terrain, not a sharp horizon): implied source distance ≥ ~11 m at 95 %.
   The A14 frame's sharp tests are concurrency (above) and azimuth (below).
+
+**How that bound is defined** (`implied_dist_m_p05` in `summary.json`): the
+5th percentile of the implied source distance over **all 800** Monte-Carlo
+samples, with samples whose convergence point lands at or above the horizon
+ranked as *infinite* distance rather than discarded — they are evidence for
+the sun, so they belong at the far end of the distribution. It is therefore
+a genuine one-sided 95 % lower bound: 95 % of the posterior mass lies beyond
+it. (An earlier version of this analysis took the 5th percentile of only the
+*finite* samples, which — with 91 % of A11's samples infinite — was really
+the ~0.4 % quantile and understated the excluded radius as 54 m. Both
+figures are now written to `summary.json`, the old one as
+`implied_dist_m_p05_finite_subset_only`.)
 
 ### The ephemeris cross-check
 
@@ -199,7 +215,7 @@ JPL Horizons, sun seen from the landing sites at the documented seconds:
   dominant uncertainty, especially for A14's boulder field.
 - **The visible skyline is not the true horizon** (ridges at finite
   distance, ±60 px systematic assigned). This mostly affects the A14
-  lamp-distance bound, which is why it is quoted as a weak ≥9 m.
+  lamp-distance bound, which is why it is quoted as a weak ≥11 m.
 - **Up-sun frames constrain elevation poorly** (A14). This is geometry,
   not a free pass: the frame still passes concurrency, azimuth, and
   lamp-exclusion tests.
@@ -222,7 +238,7 @@ kind.
 parallel 3D shadows under perspective — reproduced quantitatively in
 `fig1`. In the two canonical "problem" photos every shadow is consistent
 with one light source at infinity (χ²/dof ≈ 1.4, lamp model gains nothing
-by AIC), a studio lamp within ~54 m is excluded at 95 % for the Apollo 11
+by AIC), a studio lamp within ~224 m is excluded at 95 % for the Apollo 11
 frame, and the sun's elevation recovered from AS11-40-5961's geometry
 matches the JPL ephemeris for 1969-07-21 04:43:31 UTC at Tranquility Base
 to 0.7° ± 1.1°. Whoever lit that scene put the light exactly where the

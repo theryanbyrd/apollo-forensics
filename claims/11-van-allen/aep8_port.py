@@ -4,7 +4,8 @@ This is a line-faithful port of TRARA1/TRARA2 from `trmfun.f` (TRMFUN.FOR, 1987,
 NSSDC), as distributed by NASA in https://github.com/nasa/radbelt
 (radbelt/extern/aep8/trmfun.f, SPDX: NASA-1.3).  The model *coefficient files*
 (ae8min.asc, ae8max.asc, ap8min.asc, ap8max.asc) are the actual NASA/NSSDC
-model maps, downloaded verbatim from the same repository and cached in ./data/.
+model maps, downloaded verbatim from the same repository (tag v0.1.8) by
+fetch_data.py and cached in ./data/.
 
 The port is validated point-by-point against the genuine compiled Fortran
 (radbelt 0.1.8 binary wheel) by validate_port.py; see results/port_validation.json.

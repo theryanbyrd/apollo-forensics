@@ -20,7 +20,18 @@ and produced a false secondary peak in an earlier version of this
 analysis; the Pearson r at the best fit is still reported).
 
 Search: coarse grid over yaw (0..360 deg, 0.5 deg) x pitch, roll = 0;
-then two rounds of local grid refinement over (yaw, pitch, roll).
+then three rounds of local grid refinement over (yaw, pitch, roll). Each
+refinement box is RE-CENTRED and re-searched whenever its optimum lands on
+a face of the box, so the reported pose is an interior minimum rather than
+a value clipped by the search window (an earlier version reported
+roll = +1.8 deg for AS15-88-11866, which was exactly the boundary of both
+successive roll grids - the true optimum lies further out and fits
+better).
+
+Uniqueness is scored by refining the best rival azimuth (>10 deg away on
+the 360 deg circle) through exactly the same three-round procedure and
+taking the ratio of its RMS to the winner's - a like-for-like comparison,
+not a refined winner against a coarse rival.
 
 If the mountains were painted backdrops there is no reason the RMS
 minimum should be deep (sub-degree over a ~45 deg panorama), unique, or
@@ -53,6 +64,12 @@ RESULTS = HERE / "results"
 #   AS15-86-11603: Jim at the Rover with "Mt. Hadley, in all its glory,
 #     in the background" -> looking ~northeast (Mons Hadley summit bears
 #     ~38-45 deg from the LM).
+# Hard physical limit on the hand-held / chest-mounted Hasselblad's roll.
+# Deliberately far wider than any plausible pose so that it never becomes
+# the thing that stops the search; if the optimum ever reaches it, the fit
+# is flagged as non-converged rather than silently clipped.
+ROLL_LIMIT_DEG = 20.0
+
 DOCUMENTED = {
     "AS15-88-11866": {"expect_az": (150.0, 195.0),
                       "label": "south - Mons Hadley Delta "
@@ -112,6 +129,41 @@ def rms_cost(u, hfun, yaw, pitch, roll):
     return float(np.sqrt(np.mean(resid * resid))), az, el
 
 
+def refine_box(u, hfun, yw, p, r, span, step, span_r, step_r, max_iter=40):
+    """Grid-search (yaw, pitch, roll) inside a box centred on the current
+    pose.  If the optimum lands on a face of the box the box is re-centred
+    on it and searched again, so the value returned is a genuine interior
+    minimum of the sampled grid and never an artefact of where the window
+    happened to stop.  Returns (yaw, pitch, roll, rms, interior, n_iter).
+    """
+    bc = np.inf
+    for it in range(1, max_iter + 1):
+        yws = np.arange(yw - span, yw + span + 1e-9, step)
+        pps = np.arange(p - span, p + span + 1e-9, step)
+        rrs = np.arange(r - span_r, r + span_r + 1e-9, step_r)
+        rrs = rrs[(rrs >= -ROLL_LIMIT_DEG - 1e-9) &
+                  (rrs <= ROLL_LIMIT_DEG + 1e-9)]
+        if rrs.size == 0:
+            rrs = np.array([float(np.clip(r, -ROLL_LIMIT_DEG,
+                                          ROLL_LIMIT_DEG))])
+        bc, by, bp, br = np.inf, yw, p, r
+        for yw_ in yws:
+            for p_ in pps:
+                for r_ in rrs:
+                    c, _, _ = rms_cost(u, hfun, yw_, p_, r_)
+                    if c < bc:
+                        bc, by, bp, br = c, yw_, p_, r_
+        on_face = (by in (yws[0], yws[-1])) or (bp in (pps[0], pps[-1])) or \
+                  (rrs.size > 1 and br in (rrs[0], rrs[-1]))
+        yw, p, r = float(by), float(bp), float(br)
+        if not on_face:
+            return yw, p, r, float(bc), True, it
+        if abs(abs(r) - ROLL_LIMIT_DEG) < 1e-9:
+            # pinned by the physical roll limit: cannot expand further
+            return yw, p, r, float(bc), False, it
+    return yw, p, r, float(bc), False, max_iter
+
+
 def fit(frame: str, hfun):
     d = np.load(RESULTS / f"skyline_{frame}.npz")
     u = rays_from_pixels(d["col"].astype(float), d["row"].astype(float),
@@ -132,39 +184,53 @@ def fit(frame: str, hfun):
     k = int(np.argmin(rms_of_yaw))
     best = (yaw_grid[k], 0.0, 0.0)
 
-    # ---- refine: two rounds of shrinking grid search, all points ------
-    yw, p, r = best[0], 0.0, 0.0
-    # recover coarse pitch at best yaw
-    p = min(pitch_grid, key=lambda pp: rms_cost(us, hfun, yw, pp, 0.0)[0])
-    spans = [(1.5, 0.1), (0.3, 0.02)]
-    for (span, step) in spans:
-        yws = np.arange(yw - span, yw + span + 1e-9, step)
-        pps = np.arange(p - span, p + span + 1e-9, step)
-        rrs = np.arange(max(-4.0, r - span), min(4.0, r + span) + 1e-9,
-                        max(step, 0.05))
-        bc = np.inf
-        for yw_ in yws:
-            for p_ in pps:
-                for r_ in rrs:
-                    c, _, _ = rms_cost(u, hfun, yw_, p_, r_)
-                    if c < bc:
-                        bc, yw, p, r = c, yw_, p_, r_
-        # narrow around new optimum on next round
+    # ---- refine: three rounds of shrinking grid search, all points ----
+    # Each round re-centres its box until the optimum is interior, so a
+    # boundary hit can never be mistaken for a converged parameter.
+    def refine_from(yaw0):
+        yw_, r_ = yaw0, 0.0
+        p_ = min(pitch_grid,
+                 key=lambda pp: rms_cost(us, hfun, yw_, pp, 0.0)[0])
+        ok_all, nits = True, []
+        # (span_yaw_pitch, step_yaw_pitch, span_roll, step_roll)
+        for (span, step, span_r, step_r) in [(1.5, 0.1, 4.0, 0.2),
+                                             (0.3, 0.02, 0.5, 0.05),
+                                             (0.06, 0.005, 0.1, 0.01)]:
+            yw_, p_, r_, bc_, ok, nit = refine_box(u, hfun, yw_, p_, r_,
+                                                   span, step, span_r, step_r)
+            ok_all = ok_all and ok
+            nits.append(nit - 1)
+        return yw_, p_, r_, bc_, ok_all, nits
+
+    yw, p, r, bc, interior, recentres = refine_from(best[0])
     rms, az, el = rms_cost(u, hfun, yw, p, r)
     az = (az - (yw - 180.0)) % 360.0 + yw - 180.0   # unwrap around boresight
     pred = hfun(az)
     rcoef = pearson(el, pred)
 
-    # uniqueness: 2nd-best local minimum of coarse rms-vs-yaw, > 10 deg away
+    # uniqueness: best rival elsewhere on the circle (> 10 deg away in yaw).
+    # The rival is put through the IDENTICAL three-round refinement, so the
+    # contrast ratio compares like with like; scoring a fully refined winner
+    # against a coarse roll = 0 rival would flatter the winner.
     away = np.abs((yaw_grid - yw + 180) % 360 - 180) > 10.0
-    second = float(rms_of_yaw[away].min())
+    second_coarse = float(rms_of_yaw[away].min())
+    yaw2 = float(yaw_grid[away][int(np.argmin(rms_of_yaw[away]))])
+    yw2, p2, r2, second, _, _ = refine_from(yaw2)
+    _, az2, el2 = rms_cost(u, hfun, yw2, p2, r2)
+    az2 = (az2 - (yw2 - 180.0)) % 360.0 + yw2 - 180.0
+    rcoef2 = pearson(el2, hfun(az2))
     e0, e1 = DOCUMENTED[frame]["expect_az"]
     out = {
         "yaw_deg": float(yw), "pitch_deg": float(p), "roll_deg": float(r),
         "rms_deg": rms, "pearson_r": rcoef,
         "second_best_rms_deg": second,
+        "second_best_yaw_deg": float(yw2),
+        "second_best_pearson_r": rcoef2,
+        "second_best_rms_deg_coarse_grid": second_coarse,
         "rms_contrast": second / rms,
         "n_columns": int(n),
+        "pose_is_interior_minimum": bool(interior),
+        "refinement_recentres_per_round": recentres,
         "az_span_deg": [float(az.min()), float(az.max())],
         "documented": DOCUMENTED[frame]["label"],
         "expected_az_range": [e0, e1],
@@ -261,7 +327,9 @@ def main():
               f"2nd-best RMS {res['second_best_rms_deg']:.3f} "
               f"(contrast x{res['rms_contrast']:.1f}) | documented "
               f"{res['documented']} -> "
-              f"{'AGREES' if res['azimuth_agrees'] else 'DISAGREES'}")
+              f"{'AGREES' if res['azimuth_agrees'] else 'DISAGREES'} | "
+              f"interior minimum: {res['pose_is_interior_minimum']} "
+              f"(re-centres {res['refinement_recentres_per_round']})")
     with open(RESULTS / "match_results.json", "w") as f:
         json.dump(results, f, indent=2)
 

@@ -48,25 +48,93 @@ N_NASA_ONLY = 30_000          # "only NASA insiders" variant, order of NASA's
 
 validation_rows = []
 
+CATEGORIES = ("within_1pct", "within_paper_printed_rounding",
+              "explained_deviation", "unexplained_failure")
 
-def check(name, ours, paper, tol_pct=1.0, note=None):
+
+def _rounds_to_printed(ours, paper):
+    """Does `ours` round to the paper's value *as the paper printed it*?
+
+    Grimes states several numbers to two significant figures (Fig 1 caption:
+    "0.12", "14 years"), so a 3% deviation from the literal float can still be
+    an exact reproduction of what is on the page.  The precision is taken from
+    the literal the check was written with, which is transcribed digit-for-digit
+    from the paper: 3.68 -> 2 decimals, 14 -> integer, 4.09e-6 -> 3 sig figs.
+    """
+    lit = repr(float(paper))
+    if "e" in lit:
+        mantissa = lit.split("e")[0].lstrip("-").replace(".", "").rstrip("0")
+        sig = max(len(mantissa), 1)
+        return float("%.*e" % (sig - 1, ours)) == float("%.*e" % (sig - 1, paper))
+    decimals = len(lit.split(".")[1].rstrip("0")) if "." in lit else 0
+    return round(float(ours), decimals) == round(float(paper), decimals)
+
+
+def check(name, ours, paper, note=None):
     """Record a reproduction check against a number stated in the paper.
 
-    A check with an explanatory `note` records as an *explained deviation*
-    rather than a failure when it exceeds tolerance (used where the paper is
-    internally inconsistent or predates its own published correction)."""
+    Each check is classified, not merely passed/failed:
+      within_1pct                     - within 1% of the paper's stated value
+      within_paper_printed_rounding   - outside 1%, but rounds to exactly the
+                                        digits the paper printed (the paper
+                                        rounded, we did not)
+      explained_deviation             - outside both, with a documented reason
+                                        (`note`): the paper is internally
+                                        inconsistent, or predates its own
+                                        published correction
+      unexplained_failure             - outside both, no explanation
+    """
     dev = abs(ours - paper) / abs(paper) * 100.0
-    ok = dev <= tol_pct
+    within_1pct = dev <= 1.0
+    matches_printed = _rounds_to_printed(ours, paper)
+    if within_1pct:
+        category = "within_1pct"
+    elif matches_printed:
+        category = "within_paper_printed_rounding"
+    elif note:
+        category = "explained_deviation"
+    else:
+        category = "unexplained_failure"
     row = dict(check=name, ours=float(ours), paper=paper,
-               deviation_pct=round(dev, 3), ok=bool(ok))
+               deviation_pct=round(dev, 3),
+               within_1pct=bool(within_1pct),
+               matches_paper_printed_value=bool(matches_printed),
+               category=category,
+               ok=bool(within_1pct or matches_printed))
     if note:
         row["note"] = note
     validation_rows.append(row)
-    flag = "PASS" if ok else ("NOTE" if note else "FAIL")
-    print(f"  [{flag}] {name}: ours={ours:.6g} paper={paper:.6g} ({dev:.2f}% dev)")
-    if note and not ok:
+    flag = {"within_1pct": "PASS", "within_paper_printed_rounding": "ROUND",
+            "explained_deviation": "NOTE", "unexplained_failure": "FAIL"}[category]
+    print(f"  [{flag:>5}] {name}: ours={ours:.6g} paper={paper:.6g} ({dev:.2f}% dev)")
+    if note and not within_1pct:
         print(f"         ({note})")
-    return ok
+    return row["ok"]
+
+
+def summarize_validation(rows):
+    """Compute the reproduction breakdown from the actual check results.
+
+    Nothing here is hardcoded: the counts and the published sentence are
+    derived from `rows` on every run.
+    """
+    counts = {c: sum(1 for r in rows if r["category"] == c) for c in CATEGORIES}
+    n = len(rows)
+    parts = [f"{counts['within_1pct']}/{n} published checks within 1% of the "
+             f"paper's stated value"]
+    if counts["within_paper_printed_rounding"]:
+        parts.append(f"{counts['within_paper_printed_rounding']} more within the "
+                     f"paper's printed rounding")
+    if counts["explained_deviation"]:
+        parts.append(f"{counts['explained_deviation']} explained deviation"
+                     f"{'s' if counts['explained_deviation'] != 1 else ''}")
+    parts.append(f"{counts['unexplained_failure']} unexplained failure"
+                 f"{'s' if counts['unexplained_failure'] != 1 else ''}")
+    return {
+        "n_checks": n,
+        **counts,
+        "statement": "; ".join(parts),
+    }
 
 
 # ============================================================================
@@ -110,7 +178,7 @@ for t, n_paper in table4.items():
     note = ("Paper internally inconsistent at t=5: its text says 2521, its "
             "Table 4 says 2531; our value reproduces the text's 2521"
             if t == 5 else None)
-    check(f"N_max({t} yr)", ours, n_paper, tol_pct=0.5, note=note)
+    check(f"N_max({t} yr)", ours, n_paper, note=note)
 
 print("\nCorrection (e0151003) discussion figure:")
 # "odds of failure exceed 5% within 10 years at around 1328 participants"
@@ -133,19 +201,21 @@ print("\nOriginal Fig 1 caption (implementation check of the UNCORRECTED "
 t_dense = np.linspace(0.001, 60, 60000)
 L_gomp_orig = L_homogeneous_original(t_dense, n_gompertz(t_dense, 5000, 40.0), 5e-6)
 i = int(np.argmax(L_gomp_orig))
-check("Gompertz max L", L_gomp_orig[i], 0.38, tol_pct=2)
-check("Gompertz argmax t (yr)", t_dense[i], 29, tol_pct=3)
+check("Gompertz max L", L_gomp_orig[i], 0.38)
+check("Gompertz argmax t (yr)", t_dense[i], 29)
 lam = np.log(2) / 10.0
 L_exp_orig = L_homogeneous_original(t_dense, 5000 * np.exp(-lam * t_dense), 5e-6)
 i = int(np.argmax(L_exp_orig))
-check("Exponential-removal max L", L_exp_orig[i], 0.12, tol_pct=4)
-check("Exponential-removal argmax t (yr)", t_dense[i], 14, tol_pct=4)
+check("Exponential-removal max L", L_exp_orig[i], 0.12,
+      note="The caption prints two significant figures ('0.12'); our unrounded "
+           "value rounds to exactly that, so the >1% deviation is the paper's "
+           "rounding, not a discrepancy")
+check("Exponential-removal argmax t (yr)", t_dense[i], 14,
+      note="The caption prints a whole number of years ('14'); our unrounded "
+           "value rounds to exactly that")
 
-n_fail = sum(1 for r in validation_rows if not r["ok"] and "note" not in r)
-n_note = sum(1 for r in validation_rows if not r["ok"] and "note" in r)
-print(f"\nReproduction: {len(validation_rows) - n_fail - n_note}/"
-      f"{len(validation_rows)} checks within tolerance, "
-      f"{n_note} explained deviation(s), {n_fail} unexplained failure(s).")
+validation_summary = summarize_validation(validation_rows)
+print(f"\nReproduction: {validation_summary['statement']}.")
 
 # --- Apollo survival to 2026 --------------------------------------------------
 print("\nApollo variants, probability the secret survives 57 years (1969-2026):")
@@ -501,8 +571,10 @@ E_T_411k = apollo_variants["program_411k|p_cons_4.09e-6"][
 summary = {
     "claim": 17,
     "title": "400,000 people can't keep a secret",
+    # The reproduction score is COMPUTED from the validation table above, never
+    # hardcoded, so this sentence cannot drift away from what the code produced.
     "verdict": "SUPPORTS THE LANDINGS. Reproducing Grimes (2016) "
-               "(19/19 published numbers matched within 1%), a 411,000-person "
+               f"({validation_summary['statement']}), a 411,000-person "
                "hoax has an expected time-to-exposure of ~1.2 years and "
                "P(silence to 2026) ~ 7e-21 even at his deliberately "
                "ultra-conservative leak rate. The maximum core that survives "
@@ -536,6 +608,7 @@ summary = {
             "FBI_forensics": {"N": 500, "t_yr": 6, "p": float(p_fbi)},
         },
     },
+    "validation_summary": validation_summary,
     "validation": validation_rows,
     "apollo_variants": apollo_variants,
     "expected_time_to_exposure_411k_cons_yr": E_T_411k,

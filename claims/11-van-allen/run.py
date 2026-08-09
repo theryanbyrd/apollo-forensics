@@ -12,6 +12,10 @@ End-to-end reproduction:
   4. Compare with flown dosimetry (Apollo film badges, Artemis I phantoms) and
      medical thresholds; compute the August-1972 SPE counterfactual.
 
+Input data (`data/`, git-ignored) is fetched automatically on first run by
+fetch_data.py: the NASA AE-8/AP-8 coefficient files from github.com/nasa/radbelt
+and the NIST PSTAR/ESTAR stopping-power tables from physics.nist.gov.
+
 Usage:
   python run.py                # fallback engine (pure-Python port, no deps beyond numpy/matplotlib)
   RADBELT_PYTHON=/path/to/rbenv/bin/python python run.py    # genuine NASA radbelt engine
@@ -28,6 +32,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 
+import fetch_data
 import trajectory as tr
 import environment as env
 import dosemodel as dm
@@ -79,6 +84,10 @@ def integrate_leg(points, envdat, shields):
 
 
 def main():
+    # data/ is git-ignored; on a fresh clone this downloads the NASA AE-8/AP-8
+    # coefficient files and the NIST PSTAR/ESTAR tables before anything reads them.
+    fetch_data.ensure_data()
+
     engine_pref = "radbelt" if env.radbelt_available() else "port"
     print(f"Environment engine: {engine_pref}")
 

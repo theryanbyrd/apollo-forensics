@@ -1,7 +1,7 @@
 {
   "claim": 17,
   "title": "400,000 people can't keep a secret",
-  "verdict": "SUPPORTS THE LANDINGS. Reproducing Grimes (2016) (19/19 published numbers matched within 1%), a 411,000-person hoax has an expected time-to-exposure of ~1.2 years and P(silence to 2026) ~ 7e-21 even at his deliberately ultra-conservative leak rate. The maximum core that survives 57 years with >50% probability is ~49 people at the FBI-calibrated leak rate (~2,991 even at the ultra-conservative rate), while fabricating the independently-verified evidence needs >=~874 witting participants under heroic assumptions - and one requirement (terrain matching data not measured until 2008-09) cannot be met at ANY staff size. Adding mortality, deathbed confessions, FOIA-era documents and the Soviet tracking incentive closes the last conservative corner: no simulated 1,000+ core stayed silent to 2026.",
+  "verdict": "SUPPORTS THE LANDINGS. Reproducing Grimes (2016) (21/24 published checks within 1% of the paper's stated value; 2 more within the paper's printed rounding; 1 explained deviation; 0 unexplained failures), a 411,000-person hoax has an expected time-to-exposure of ~1.2 years and P(silence to 2026) ~ 7e-21 even at his deliberately ultra-conservative leak rate. The maximum core that survives 57 years with >50% probability is ~49 people at the FBI-calibrated leak rate (~2,991 even at the ultra-conservative rate), while fabricating the independently-verified evidence needs >=~874 witting participants under heroic assumptions - and one requirement (terrain matching data not measured until 2008-09) cannot be met at ANY staff size. Adding mortality, deathbed confessions, FOIA-era documents and the Soviet tracking incentive closes the last conservative corner: no simulated 1,000+ core stayed silent to 2026.",
   "headline": "Expected exposure of a 411,000-person hoax: ~1.2 years; max 57-year-silent core: ~49 (calibrated) to ~2,991 (ultra-conservative) people; faking the evidence needs >=~874 and realistically tens of thousands - the hoax is pincered from both sides.",
   "impressive": "results/fig2_heatmap_frontier.png - the (N, p) survival heatmap with the three real exposed-conspiracy calibration points and the Apollo point 5+ orders of magnitude outside the survivable region; runner-up: the ABM shows 'the conspirators would all be dead by now' BACKFIRES - deaths become deathbed-confession opportunities.",
   "model": {
@@ -25,12 +25,23 @@
       }
     }
   },
+  "validation_summary": {
+    "n_checks": 24,
+    "within_1pct": 21,
+    "within_paper_printed_rounding": 2,
+    "explained_deviation": 1,
+    "unexplained_failure": 0,
+    "statement": "21/24 published checks within 1% of the paper's stated value; 2 more within the paper's printed rounding; 1 explained deviation; 0 unexplained failures"
+  },
   "validation": [
     {
       "check": "PRISM p (N=30,000, t=6yr)",
       "ours": 4.092008262877067e-06,
       "paper": 4.09e-06,
       "deviation_pct": 0.049,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -38,6 +49,9 @@
       "ours": 4.196633768483285e-06,
       "paper": 4.2e-06,
       "deviation_pct": 0.08,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -45,6 +59,9 @@
       "ours": 0.0002454908602962258,
       "paper": 0.000245,
       "deviation_pct": 0.2,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -52,6 +69,9 @@
       "ours": 3.6811151093120746,
       "paper": 3.68,
       "deviation_pct": 0.03,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -59,6 +79,9 @@
       "ours": 3.702157752666333,
       "paper": 3.7,
       "deviation_pct": 0.058,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -66,6 +89,9 @@
       "ours": 26.71241760917612,
       "paper": 26.77,
       "deviation_pct": 0.215,
+      "within_1pct": true,
+      "matches_paper_printed_value": false,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -73,6 +99,9 @@
       "ours": 34.81357073094137,
       "paper": 34.78,
       "deviation_pct": 0.097,
+      "within_1pct": true,
+      "matches_paper_printed_value": false,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -80,6 +109,9 @@
       "ours": 3.150968671450699,
       "paper": 3.15,
       "deviation_pct": 0.031,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -87,6 +119,9 @@
       "ours": 3.1664173394256916,
       "paper": 3.17,
       "deviation_pct": 0.113,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -94,6 +129,9 @@
       "ours": 3.7398958829871,
       "paper": 3.68,
       "deviation_pct": 1.628,
+      "within_1pct": false,
+      "matches_paper_printed_value": false,
+      "category": "explained_deviation",
       "ok": false,
       "note": "Paper's Table 3 predates its own published correction (e0151003, non-homogeneous Poisson form used here); the paper itself notes the Gompertz curve is 'non-resolvable visually' from the constant-N 3.68 yr"
     },
@@ -102,6 +140,9 @@
       "ours": 2521.178605621898,
       "paper": 2531,
       "deviation_pct": 0.388,
+      "within_1pct": true,
+      "matches_paper_printed_value": false,
+      "category": "within_1pct",
       "ok": true,
       "note": "Paper internally inconsistent at t=5: its text says 2521, its Table 4 says 2531; our value reproduces the text's 2521"
     },
@@ -110,6 +151,9 @@
       "ours": 1257.3396309394027,
       "paper": 1257,
       "deviation_pct": 0.027,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -117,6 +161,9 @@
       "ours": 837.5075766164387,
       "paper": 838,
       "deviation_pct": 0.059,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -124,6 +171,9 @@
       "ours": 627.8615780755243,
       "paper": 628,
       "deviation_pct": 0.022,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -131,6 +181,9 @@
       "ours": 502.1602103830092,
       "paper": 502,
       "deviation_pct": 0.032,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -138,6 +191,9 @@
       "ours": 418.39518731666726,
       "paper": 418,
       "deviation_pct": 0.095,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -145,6 +201,9 @@
       "ours": 313.72924873606297,
       "paper": 313,
       "deviation_pct": 0.233,
+      "within_1pct": true,
+      "matches_paper_printed_value": false,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -152,6 +211,9 @@
       "ours": 250.95118565721188,
       "paper": 251,
       "deviation_pct": 0.019,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -159,6 +221,9 @@
       "ours": 125.44339602978754,
       "paper": 125,
       "deviation_pct": 0.355,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -166,6 +231,9 @@
       "ours": 1327.4857258796692,
       "paper": 1328,
       "deviation_pct": 0.039,
+      "within_1pct": true,
+      "matches_paper_printed_value": false,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -173,6 +241,9 @@
       "ours": 0.37844671225234905,
       "paper": 0.38,
       "deviation_pct": 0.409,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -180,6 +251,9 @@
       "ours": 28.886000000000003,
       "paper": 29,
       "deviation_pct": 0.393,
+      "within_1pct": true,
+      "matches_paper_printed_value": true,
+      "category": "within_1pct",
       "ok": true
     },
     {
@@ -187,14 +261,22 @@
       "ours": 0.12372726723800077,
       "paper": 0.12,
       "deviation_pct": 3.106,
-      "ok": true
+      "within_1pct": false,
+      "matches_paper_printed_value": true,
+      "category": "within_paper_printed_rounding",
+      "ok": true,
+      "note": "The caption prints two significant figures ('0.12'); our unrounded value rounds to exactly that, so the >1% deviation is the paper's rounding, not a discrepancy"
     },
     {
       "check": "Exponential-removal argmax t (yr)",
       "ours": 14.493,
       "paper": 14,
       "deviation_pct": 3.521,
-      "ok": true
+      "within_1pct": false,
+      "matches_paper_printed_value": true,
+      "category": "within_paper_printed_rounding",
+      "ok": true,
+      "note": "The caption prints a whole number of years ('14'); our unrounded value rounds to exactly that"
     }
   ],
   "apollo_variants": {

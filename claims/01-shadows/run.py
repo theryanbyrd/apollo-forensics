@@ -65,30 +65,84 @@ HORIZONS = {
 }
 
 
+def _valid_image(path):
+    """True only if `path` fully decodes as an image.
+
+    Catches an HTML/JSON error page written under a .jpg name and a
+    download truncated by a timeout - both of which would otherwise sit in
+    the cache forever and blow up much later with a confusing PIL error.
+    """
+    try:
+        with Image.open(path) as im:
+            im.load()          # full decode; raises on truncated/corrupt
+        return True
+    except Exception:
+        return False
+
+
+def _valid_horizons(path):
+    """True only if `path` is a Horizons response with a parseable table."""
+    try:
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            txt = fh.read()
+    except OSError:
+        return False
+    if "$$SOE" not in txt or "$$EOE" not in txt:
+        return False
+    try:
+        return len(parse_horizons(path)) >= 2      # need >=2 rows to interp
+    except Exception:
+        return False
+
+
+def _fetch(args, path, validator, what, kind):
+    """Download to a .part file, validate it, then atomically rename.
+
+    `curl` exits 0 on HTTP 404/500 and happily writes the error body to the
+    output file, so `--fail` is mandatory; and a partial transfer must never
+    be left where os.path.exists() would treat it as a complete cache entry.
+    """
+    tmp = path + ".part"
+    try:
+        subprocess.run(args + ["-o", tmp], check=True)
+        if not validator(tmp):
+            raise RuntimeError(
+                f"{what}: the server did not return a valid {kind} "
+                f"(error page, or a transfer truncated by --max-time). "
+                f"Nothing was cached; re-run to retry.")
+        os.replace(tmp, path)
+    finally:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+
+
 def ensure_data():
     for fn, url in DOWNLOADS.items():
         path = os.path.join(DATA, fn)
-        if not os.path.exists(path):
-            print("downloading", fn)
-            subprocess.run(["curl", "-s", "--max-time", "180", "-o", path, url],
-                           check=True)
+        # re-fetch if absent OR if a previous run cached a bad file
+        if os.path.exists(path) and _valid_image(path):
+            continue
+        print("downloading", fn)
+        _fetch(["curl", "-sS", "--fail", "--location", "--max-time", "180",
+                url], path, _valid_image, fn, "image")
     for fn, q in HORIZONS.items():
         path = os.path.join(DATA, fn)
-        if not os.path.exists(path):
-            print("querying JPL Horizons ->", fn)
-            args = ["curl", "-sG", "https://ssd.jpl.nasa.gov/api/horizons.api"]
-            base = {
-                "format": "text", "COMMAND": "'10'", "OBJ_DATA": "'NO'",
-                "MAKE_EPHEM": "'YES'", "EPHEM_TYPE": "'OBSERVER'",
-                "CENTER": "'coord@301'", "COORD_TYPE": "'GEODETIC'",
-                "STEP_SIZE": "'10m'", "QUANTITIES": "'4'",
-                "APPARENT": "'AIRLESS'",
-            }
-            base.update(q)
-            for k, v in base.items():
-                args += ["--data-urlencode", f"{k}={v}"]
-            args += ["-o", path]
-            subprocess.run(args, check=True)
+        if os.path.exists(path) and _valid_horizons(path):
+            continue
+        print("querying JPL Horizons ->", fn)
+        args = ["curl", "-sSG", "--fail", "--max-time", "180",
+                "https://ssd.jpl.nasa.gov/api/horizons.api"]
+        base = {
+            "format": "text", "COMMAND": "'10'", "OBJ_DATA": "'NO'",
+            "MAKE_EPHEM": "'YES'", "EPHEM_TYPE": "'OBSERVER'",
+            "CENTER": "'coord@301'", "COORD_TYPE": "'GEODETIC'",
+            "STEP_SIZE": "'10m'", "QUANTITIES": "'4'",
+            "APPARENT": "'AIRLESS'",
+        }
+        base.update(q)
+        for k, v in base.items():
+            args += ["--data-urlencode", f"{k}={v}"]
+        _fetch(args, path, _valid_horizons, fn, "Horizons ephemeris")
 
 
 def parse_horizons(path):
@@ -294,6 +348,30 @@ class PhotoModel:
         return out
 
 
+def lower_bound_distance(dist, q=0.05):
+    """One-sided lower confidence bound on the implied source distance.
+
+    Computed over the FULL Monte-Carlo sample.  Samples whose convergence
+    point lands at or above the horizon mean "source at infinity" (the sun
+    hypothesis) and carry dist = +inf; they are the LARGEST distances in the
+    distribution, so they must be RANKED, not discarded.  Dropping them and
+    taking the 5th percentile of the finite remainder - as an earlier
+    version did - is a far deeper quantile of the real distribution (for
+    AS11, where 91 % of samples are infinite, it was the ~0.4 % quantile)
+    and understates the excluded radius.
+
+    Returns the k-th smallest sample, k = ceil(q * N): the empirical
+    q-quantile, i.e. the (1-q) one-sided lower bound.  None if that
+    quantile is itself infinite (no finite bound is implied).
+    """
+    if dist.size == 0:
+        return None
+    s = np.sort(dist)                      # np.sort places +inf last
+    k = min(max(1, math.ceil(q * s.size)), s.size)
+    v = float(s[k - 1])
+    return v if math.isfinite(v) else None
+
+
 def implied_distance(depress_deg, h_cam):
     """Ground distance of the point imaged at depression angle below horizon."""
     if depress_deg <= 0.0:
@@ -396,8 +474,15 @@ def run_photo(tag, ann_file, sign_src, terrain_frac, seedkey):
             "implied_source_dist_m_median": (float(np.median(dist))
                                              if np.isfinite(np.median(dist))
                                              else None),
-            "implied_dist_m_p05": (float(np.percentile(finite, 5))
-                                   if len(finite) else None),
+            "implied_dist_m_p05": lower_bound_distance(dist, 0.05),
+            "implied_dist_m_p05_method": (
+                "5th percentile of ALL {} Monte-Carlo samples, with the "
+                "samples that converge at or above the horizon ranked as "
+                "infinite distance; = one-sided 95% lower bound on the "
+                "source distance".format(dist.size)),
+            "implied_dist_m_p05_finite_subset_only": (
+                float(np.percentile(finite, 5)) if len(finite) else None),
+            "n_mc_samples": int(dist.size),
             "frac_mc_convergence_at_or_above_horizon": frac_above,
         },
         "delta_aic_lamp_minus_sun": base["lamp"]["aic"] - base["sun"]["aic"],

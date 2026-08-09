@@ -30,14 +30,16 @@ N(t) is either constant (a maintained cover-up) or decays by Gompertz mortality 
 
 ## Reproduction validation
 
-**23/24 checks within 1% of the paper's stated values; 1 explained deviation; 0 unexplained failures** (full table in `results/summary.json`):
+**21/24 published checks within 1% of the paper's stated value; 2 more within the paper's printed rounding; 1 explained deviation; 0 unexplained failures.** These four counts are not written by hand: `run.py` classifies every check and computes the breakdown at runtime into `validation_summary` in `results/summary.json`, alongside the full per-check table.
 
-- Table 1: all three calibrated p values (0.05–0.20% deviation).
-- Table 3: all six constant-N failure times, incl. **Moon hoax N=411,000 → L>0.95 at 3.68 yr** (0.03% dev).
-- Table 4: all nine maximum-N rows (≤0.4% dev). At t=5 the paper is internally inconsistent (text: 2521, table: 2531); we reproduce the text's 2521.
-- Correction e0151003: Gompertz single event exceeds L=0.05 within 10 yr at N₀ ≈ 1328 (ours: 1327.5).
-- Original Fig 1 caption values (0.38 @ 29 yr; 0.12 @ 14 yr) under the pre-correction formula (implementation check).
-- The one >1% deviation: Table 3's Gompertz Apollo row (3.68 yr; ours 3.74) — the paper's table predates its own correction; the paper itself calls the two curves "non-resolvable visually."
+- Table 1: all three calibrated p values (0.05–0.20% dev). **Within 1%.**
+- Table 3: all six constant-N failure times, incl. **Moon hoax N=411,000 → L>0.95 at 3.68 yr** (0.03% dev). **Within 1%.**
+- Table 4: all nine maximum-N rows (≤0.4% dev). **Within 1%.** At t=5 the paper is internally inconsistent (text: 2521, table: 2531); we reproduce the text's 2521, which is 0.39% from the table's figure.
+- Correction e0151003: Gompertz single event exceeds L=0.05 within 10 yr at N₀ ≈ 1328 (ours: 1327.5, 0.04% dev). **Within 1%.**
+- Original Fig 1 caption under the pre-correction formula (implementation check): Gompertz peak **L = 0.38 at 29 yr** (ours 0.3784 at 28.89 yr; 0.41% / 0.39% dev) — **within 1%**.
+- **The two rounding cases.** Same caption, exponential-removal curve: it prints **0.12** and **14 years**; we get **0.1237** and **14.49 yr**, which are 3.11% and 3.52% from those printed floats but round to exactly the digits on the page. That is the paper's rounding, not a discrepancy — so they are counted in their own bucket instead of being folded into "within 1%".
+- **The one explained deviation.** Table 3's Gompertz Apollo row: the paper says 3.68 yr, we get 3.74 (1.63% dev). The paper's table predates its own published correction (e0151003), whose non-homogeneous form we use; the paper itself calls the two curves "non-resolvable visually."
+- **Zero unexplained failures.**
 
 ## Results
 
