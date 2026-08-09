@@ -2,17 +2,33 @@
   "claim": 9,
   "title": "Slowed-down Earth footage",
   "verdict": "REFUTED",
-  "headline": "Tracked ballistics fit apparent g = 1.22 +/- 1.4 m/s^2 (Apollo 15 feather) and 1.98 +/- 0.1 (stat) m/s^2 (Apollo 16 jump), consistent with lunar 1.62 and excluding real-time Earth gravity at >6 sigma - while the slowed-Earth escape route (s=2.46) fails the same clip's synced audio (Scott would have been speaking 9.9 syllables/s) and the feather's drag physics (its screen-time impact speed, 2.35 +/- 0.48 m/s, is ~4x the maximum any Earth-air feather could show in 2.46x-slowed footage).",
+  "headline": "Tracked ballistics fit apparent g = 1.22 +/- 1.4 m/s^2 (Apollo 15 feather) and 1.78 +/- 0.042 (stat) +/- 0.121 (scale) m/s^2 (Apollo 16 jump), consistent with lunar 1.62 and excluding real-time Earth gravity at >6 sigma - while the slowed-Earth escape route (s=2.46) fails the same clip's synced audio (Scott would have been speaking 9.9 syllables/s) and the feather's drag physics (its screen-time impact speed, 2.35 +/- 0.48 m/s, is ~4x the maximum any Earth-air feather could show in 2.46x-slowed footage).",
   "impressive": "One 49-second NASA TV clip kills the claim three independent ways at once: the feather's tracked fall matches vacuum free fall at lunar g; the same clip's PTS-synced audio matches the mission transcript second-for-second (so no global slow-down is available); and a drag ODE shows a real feather in Earth air would have crossed the last 0.3 m of its fall 4-7x slower than observed, landing ~2.5 s of screen time after the hammer instead of the observed 0.20 +/- 0.07 s.",
   "numbers": {
     "a15_feather_g_m_s2": [
       1.22,
       1.4
     ],
-    "a16_jump_g_m_s2": [
-      1.98,
-      0.1
+    "a15_feather_a_px_s2": [
+      81.2,
+      93.0
     ],
+    "a15_release_frame_point": 1143.6,
+    "a15_release_frame_ci68": [
+      1082.3,
+      1170.5
+    ],
+    "a16_jump_g_m_s2": [
+      1.78,
+      0.042,
+      0.121,
+      0.128
+    ],
+    "a16_jump_g_per_jump_m_s2": [
+      1.76,
+      1.84
+    ],
+    "a16_scale_px_per_m": 71.67,
     "a16_pushoff_s": [
       0.3,
       0.23

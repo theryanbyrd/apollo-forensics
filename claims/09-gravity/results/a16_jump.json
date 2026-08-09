@@ -1,12 +1,24 @@
 {
-  "scale_px_per_m": 64.9,
+  "scale": {
+    "source": "claims/10-wire-rigs/a16_scale.py (shared with claim 10)",
+    "px_per_m": 71.67,
+    "rel_err_systematic": 0.0677,
+    "standing_px_adopted": 129.0,
+    "standing_m_adopted": 1.8,
+    "standing_px_remeasured_here": 128.78,
+    "standing_px_remeasured_sd": 3.61,
+    "standing_px_remeasured_n_frames": 62
+  },
+  "scale_px_per_m": 71.67,
   "jump1": {
     "flight_window": [
       240,
       279
     ],
-    "g_apparent_m_s2": 1.94,
-    "g_err_m_s2": 0.13,
+    "g_apparent_m_s2": 1.76,
+    "g_stat_err_m_s2": 0.049,
+    "g_scale_sys_err_m_s2": 0.119,
+    "g_total_err_m_s2": 0.129,
     "hang_time_s": 1.4,
     "push_off_s": 0.3,
     "push_off_under_hoax_s": 0.122,
@@ -18,17 +30,19 @@
       336,
       366
     ],
-    "g_apparent_m_s2": 2.03,
-    "g_err_m_s2": 0.15,
+    "g_apparent_m_s2": 1.84,
+    "g_stat_err_m_s2": 0.083,
+    "g_scale_sys_err_m_s2": 0.125,
+    "g_total_err_m_s2": 0.15,
     "hang_time_s": 1.43,
     "push_off_s": 0.23,
     "push_off_under_hoax_s": 0.095,
     "crouch_frame": 320,
     "liftoff_frame": 327
   },
-  "combined_g_m_s2": [
-    1.98,
-    0.1
-  ],
-  "note": "Helmet-top parabola includes body-pose change near takeoff/landing; flight windows are trimmed to the airborne phase. Under the hoax the real push-off would be ~0.1 s - beyond human capability in a 90 kg suit."
+  "combined_g_m_s2": 1.78,
+  "combined_g_stat_err_m_s2": 0.042,
+  "combined_g_scale_sys_err_m_s2": 0.121,
+  "combined_g_total_err_m_s2": 0.128,
+  "note": "Helmet-top parabola includes body-pose change near takeoff/landing; flight windows are trimmed to the airborne phase. Under the hoax the real push-off would be ~0.1 s - beyond human capability in a 90 kg suit. The scale systematic is the same constant for both jumps (and for claim 10), so it is applied once to the combined value rather than combined in quadrature."
 }

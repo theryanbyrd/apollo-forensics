@@ -74,31 +74,59 @@ scipy + matplotlib only):
    small mound ~20 px above the feather's ground line, then sliding slowly to
    its final rest position by frame ~1233 (visible in `results/a15_streak.png`
    and corroborated by the independent archive.org copy).
-3. **Metric scale.** Suited David Scott (1.83 m; A7LB EVA stack 1.92 ± 0.06 m)
-   measures 128 ± 5 px helmet-crown-to-boot-sole → **66.7 ± 4.5 px/m**.
-   Cross-check: the measured hand-to-ground drop of 87 px → 1.30 m, matching
-   a chest-height release. For A16, suited John Young (1.78 m → 1.88 ± 0.07 m)
-   measures 122 ± 6 px → 64.9 px/m.
-4. **Fits.** `y(t) = y₀ + v₀t + ½at²` by least squares; 20 000-sample
-   bootstrap over pixel noise (1 px), step-timing noise (0.6 frames) and the
-   scale calibration (`src/a15_fit.py`, `src/a16_jump.py`).
+3. **Metric scale.** A15: suited David Scott (1.83 m; A7LB EVA stack
+   1.92 ± 0.06 m) measures 128 ± 5 px helmet-crown-to-boot-sole →
+   **66.7 ± 4.5 px/m**. Cross-check: the measured hand-to-ground drop of
+   87 px → 1.30 m, matching a chest-height release.
+   A16: **imported from `claims/10-wire-rigs/a16_scale.py`**, the single
+   definition of this clip's calibration, shared with claim 10 so that the
+   two claims cannot disagree about the same measurement —
+   **129.0 ± 5.0 px = 1.80 ± 0.10 m → 71.67 px/m, ±6.8 % systematic**
+   (derivation and the code that measures the 129 px from the frames are in
+   that file). Earlier versions of this page used 122 px / 1.88 m
+   (64.9 px/m) while claim 10 used 128 px / 1.80 m (71.1 px/m) — a 10 %
+   contradiction about one physical measurement. Re-measuring the extent
+   over 62 frames gives 129.0 ± 3.5 px (claim 10's decode) and 128.8 ± 3.6 px
+   (this claim's PNG frames, printed by `run.py`); 122 px was the
+   crown-to-*ankle* extent and 1.88 m additionally ignored the knees-flexed
+   stance the footage actually shows, so the two errors compounded.
+4. **Fits.** `y(t) = y₀ + v₀t + ½at²` by least squares; bootstrap over pixel
+   noise (1 px) and step-timing noise (0.6 frames for A15, 0.5 for A16)
+   (`src/a15_fit.py`, `src/a16_jump.py`). For A16 the **scale is held fixed
+   in the bootstrap and carried separately**: it is one constant shared by
+   both jumps (and by claim 10), so resampling it per jump and then combining
+   the jumps as if independent would shrink a systematic that cannot shrink.
+   Statistical parts combine by inverse variance; the scale systematic is
+   applied once to the combined value.
 5. **Hypothesis tests.** Feather drag ODE (`src/feather_drag.py`), speech
    tempo (`src/a15_tempo.py`), and the A16 push-off biomechanics.
 
 ---
 
-## Results (all numbers produced by the code in this directory)
+## Results
+
+Every number below is produced by `run.py` and lands in `results/*.json`,
+with two stated exceptions: the A16 metric scale is imported from
+`claims/10-wire-rigs/a16_scale.py` (shared, by design — see Method 3), and
+the archive.org frame-number cross-check in the timeline section was done by
+eye and is labelled as such.
 
 ### Ballistics
 
 | quantity | value |
 |---|---|
-| A15 feather apparent acceleration | **g = 1.22 ± 1.40 m/s²** (81 ± 85 px/s²) |
+| A15 feather apparent acceleration | **g = 1.22 ± 1.40 m/s²** (81 ± 93 px/s²) |
 | → consistent with lunar 1.62 m/s²; real-time Earth 9.81 m/s² excluded at | **6.1 σ** |
-| A16 jump 1 / jump 2 apparent g (helmet-top parabolas) | **1.94 ± 0.13** / **2.03 ± 0.15 m/s²** (stat) |
-| A16 combined | **1.98 ± 0.10 (stat) ± ~0.3 (scale/anthropometry sys) m/s²** |
+| A16 jump 1 / jump 2 apparent g (helmet-top parabolas) | **1.76 ± 0.05 (stat)** / **1.84 ± 0.08 (stat) m/s²**, both ± 6.8 % scale |
+| A16 combined | **1.78 ± 0.04 (stat) ± 0.12 (scale) m/s² = ± 0.13 total** |
 | A16 hang times | 1.40 s / 1.43 s |
 | playback factor *s* required if the A15 fall were really Earth footage | 2.84 (68 % CI 1.9–4.1) — **includes 2.46** |
+
+The two A16 error components are reported separately because they behave
+differently: the ±0.04 statistical part is what shrinks when you add jumps,
+the ±0.12 scale part is one shared constant that never shrinks. Quoting a
+single inverse-variance-combined "± 0.10 (stat)" — as an earlier version of
+this page did — silently averaged a correlated systematic down.
 
 So the trajectories fit lunar gravity, and — exactly as the claim intends —
 a *s* ≈ 2.46 slow-down of Earth footage is *ballistically* allowed. A lone
@@ -153,10 +181,19 @@ audio/tempo test above kills it anyway. There is no self-consistent *s*.
 
 * 1.94–37.6 s — Scott's Galileo monologue, ending "...they'll hit the ground
   at the same time." (frame ≈ 1155)
-* ≈ 1179–1183 — hand motion; release completes (the feather's velocity
-  extrapolates to zero at frame ≈ 1152 ± 8, i.e. consistent with a
-  from-rest release right at the end of the sentence; the exact instant is
-  hidden against the bright suit)
+* ≈ 1179–1183 — hand motion; release completes. The exact instant is hidden
+  against the bright suit, and **the ballistic extrapolation cannot recover
+  it**: propagating the fit through the same bootstrap, the zero-velocity
+  time `t_rel = t₀ − v₀/a` has a point estimate of frame **1143.6** with a
+  68 % interval of **1082–1171** (≈ 3 s wide), and 20 % of bootstrap draws
+  give a ≤ 0, i.e. no from-rest solution at all. That is what a fit whose
+  acceleration is only ~1 σ from zero can support. The release *is*
+  consistent with the end of the sentence (frame 1155 sits inside the
+  interval, 0.38 s after the point estimate), but this test does not
+  establish it and nothing downstream depends on it — the drag and tempo
+  arguments use the landing times and the measured speeds, not the release
+  instant. An earlier version of this page quoted "frame ≈ 1152 ± 8", a
+  number that appeared nowhere in the code and was ~10× too confident.
 * 1195.5 ± 1.5 — hammer lands on the raised mound (then slides ~0.3 m
   downslope until ≈ frame 1233)
 * 1201.5 ± 1.5 — feather lands
@@ -165,7 +202,10 @@ audio/tempo test above kills it anyway. There is no self-consistent *s*.
 
 The independent 15-fps archive.org copy shows the same event sequence at the
 same wall-clock spacings (hammer's initial rest appears at its frame 579 ≈
-our frame 1199), ruling out an encode-specific timing artifact.
+our frame 1199), ruling out an encode-specific timing artifact. *This one
+cross-check was made by stepping through the archive.org file by eye;
+`run.py` downloads that file but does not track it, so unlike everything
+else on this page the 579 is not regenerated by the code.*
 
 ---
 
@@ -189,12 +229,29 @@ our frame 1199), ruling out an encode-specific timing artifact.
 * The A15 g error bar is wide (±1.4 m/s²) because one 10 Hz field-sequential
   event gives only 5 usable position steps and the release instant is
   occluded; the acceleration is measured from track curvature only. It still
-  excludes real-time Earth at 6 σ.
-* The A16 g runs ~0.35 high of 1.62 at face value; the stated ±0.3 systematic
-  covers the helmet-top-vs-centre-of-mass proxy, suited-height anthropometry
-  and any residual perspective. The camera was verified static (±1 px) during
-  both jumps. Real-time Earth (9.81) is > 25 σ away under any of these
-  systematics.
+  excludes real-time Earth at 6 σ. The same width is why the release-time
+  extrapolation above is uninformative.
+* The A15 and A16 scales use slightly different anthropometric conventions:
+  A15 takes Scott's suited stack fully upright (1.92 m), A16 takes Young's
+  crown-to-sole extent in the knees-flexed stance the clip actually shows
+  (1.80 m). A15 is not re-derived here because its g error is 115 %
+  fit-dominated — the scale contributes nothing to it — whereas the A16
+  scale had to be fixed because claim 10 depends on it too.
+* **The A16 g runs ~0.16 high of 1.62** (1.78 vs 1.62, i.e. 10 %), which is
+  1.3× the ±0.12 scale systematic. Claim 10 measures *the same two jumps*
+  with a more careful method — whole-body template rather than the helmet
+  crown, flight windows set by the acceleration sign at the contact events,
+  and a telecine-cadence correction — and gets **1.677 and 1.667 m/s²**, ~6 %
+  below these numbers, using the identical metric scale. The difference is
+  a method systematic, not a scale disagreement: re-fitting these jumps over
+  a ±2-frame family of windows moves g by ±0.05–0.06 m/s², and the helmet
+  crown moves relative to the centre of mass as Young pitches his torso and
+  swings his arm up to salute in flight. **For the precision A16 number,
+  prefer claim 10's.** What this claim needs from A16 is only that g is near
+  1.6 and nowhere near 9.8, and both analyses agree on that.
+* The camera was verified static (±1 px) during both jumps. Real-time Earth
+  (9.81) is 63 σ away from the A16 combined value on the total ±0.13 error,
+  and still > 25 σ away even if the scale systematic were tripled.
 * The hammer track is partial (dark object against mixed background); we use
   it only for its landing time and identity, not for a second acceleration
   fit.

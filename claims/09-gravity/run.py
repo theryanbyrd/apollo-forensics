@@ -44,14 +44,19 @@ def main():
 
     g = fit["feather_fit"]["g_apparent_m_s2"]
     ge = fit["feather_fit"]["g_err_m_s2"]
-    gj, gje = jump["combined_g_m_s2"]
+    gj = jump["combined_g_m_s2"]
+    gje = jump["combined_g_stat_err_m_s2"]        # statistical only
+    gjs = jump["combined_g_scale_sys_err_m_s2"]   # correlated scale systematic
+    gjt = jump["combined_g_total_err_m_s2"]
+    rel = fit["release_extrapolation"]
     summary = {
         "claim": 9,
         "title": "Slowed-down Earth footage",
         "verdict": "REFUTED",
         "headline": (
             f"Tracked ballistics fit apparent g = {g} +/- {ge} m/s^2 "
-            f"(Apollo 15 feather) and {gj} +/- {gje} (stat) m/s^2 (Apollo 16 "
+            f"(Apollo 15 feather) and {gj} +/- {gje} (stat) +/- {gjs} "
+            f"(scale) m/s^2 (Apollo 16 "
             "jump), consistent with lunar 1.62 and excluding real-time Earth "
             "gravity at >6 sigma - while the slowed-Earth escape route "
             "(s=2.46) fails the same clip's synced audio (Scott would have "
@@ -72,7 +77,15 @@ def main():
         ),
         "numbers": {
             "a15_feather_g_m_s2": [g, ge],
-            "a16_jump_g_m_s2": [gj, gje],
+            "a15_feather_a_px_s2": [fit["feather_fit"]["a_px_per_s2"],
+                                    fit["feather_fit"]["a_err_px_per_s2"]],
+            "a15_release_frame_point": rel["t_rel_frame_point_estimate"],
+            "a15_release_frame_ci68": rel["t_rel_frame_ci68"],
+            "a16_jump_g_m_s2": [gj, gje, gjs, gjt],
+            "a16_jump_g_per_jump_m_s2": [
+                jump["jump1"]["g_apparent_m_s2"],
+                jump["jump2"]["g_apparent_m_s2"]],
+            "a16_scale_px_per_m": jump["scale_px_per_m"],
             "a16_pushoff_s": [jump["jump1"]["push_off_s"],
                               jump["jump2"]["push_off_s"]],
             "a16_hang_time_s": [jump["jump1"]["hang_time_s"],

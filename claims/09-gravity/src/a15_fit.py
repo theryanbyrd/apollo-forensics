@@ -75,6 +75,40 @@ def main():
     # how strongly is real-time Earth gravity excluded?
     sigma_earth = (9.81 - g_fit) / g_err
 
+    # acceleration error in pixel space (no scale term): the pixel-space fit
+    # and the metric fit have different fractional errors, so this cannot be
+    # obtained by multiplying g_err by the scale.
+    a_px_s2_err = float(np.std(boots[:, 1]) * FPS ** 2)
+
+    # ---- release-time extrapolation ---------------------------------------
+    # If the feather left Scott's hand from rest, the fitted velocity
+    # extrapolates back to zero at t_rel = t0 - v0/a.  Both v0 and a come from
+    # the same 5-step fit, so t_rel is propagated through the same bootstrap.
+    # a is itself only ~1 sigma from zero here, so 1/a has a fat tail: the
+    # distribution is summarised by percentiles, not by a mean +/- sd, and
+    # bootstrap draws with a <= 0 (the feather decelerating) give no
+    # from-rest release at all and are counted rather than discarded.
+    t_rel_point = float(t[0] - coef[1] / coef[2])
+    with np.errstate(divide="ignore", invalid="ignore"):
+        t_rel_boot = t[0] - boots[:, 0] / boots[:, 1]
+    ok_rel = boots[:, 1] > 0
+    frac_unphysical = float(1.0 - ok_rel.mean())
+    t_rel_lo, t_rel_med, t_rel_hi = np.percentile(t_rel_boot[ok_rel],
+                                                  [16, 50, 84])
+    release = {
+        "method": "zero-velocity extrapolation t_rel = t0 - v0/a of the "
+                  "feather free-fall fit, propagated through the same "
+                  "bootstrap as g",
+        "t_rel_frame_point_estimate": round(t_rel_point, 1),
+        "t_rel_frame_ci68": [round(float(t_rel_lo), 1),
+                             round(float(t_rel_hi), 1)],
+        "t_rel_frame_median": round(float(t_rel_med), 1),
+        "bootstrap_fraction_with_a_le_0": round(frac_unphysical, 3),
+        "speech_end_frame": SPEECH_END_FRAME,
+        "t_rel_minus_speech_end_s": round((t_rel_point - SPEECH_END_FRAME)
+                                          / FPS, 2),
+    }
+
     # fall height check (image drop hand->ground ~ 87 px)
     drop_h = 87.0 / scale
 
@@ -95,6 +129,7 @@ def main():
         "scale_px_per_m": round(scale, 1),
         "feather_fit": {
             "a_px_per_s2": round(float(a_px_s2), 1),
+            "a_err_px_per_s2": round(a_px_s2_err, 1),
             "g_apparent_m_s2": round(float(g_fit), 2),
             "g_err_m_s2": round(float(g_err), 2),
             "v0_px_per_frame_at_1184.5": round(float(coef[1]), 2),
@@ -105,6 +140,7 @@ def main():
             "speech_end_frame": SPEECH_END_FRAME,
             "drop_height_m_from_87px": round(float(drop_h), 2),
         },
+        "release_extrapolation": release,
         "s_required_if_earth": {"value": round(s_req, 2),
                                 "ci68": [round(float(s_lo), 2),
                                          round(float(s_hi), 2)]},

@@ -22,6 +22,7 @@ Data (fetched by this script, cached in data/, gitignored):
 
 Every number in the README is printed by this script.
 """
+import hashlib
 import json
 import os
 import sys
@@ -36,6 +37,8 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from scipy.signal import savgol_filter
 from scipy.ndimage import shift as ndshift, median_filter
+
+import a16_scale
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
@@ -54,20 +57,22 @@ FPS_MOV = 15.01              # container rate of a16v.1202502.mov
 G_MOON = 1.62                # m/s^2
 G_EARTH = 9.81               # m/s^2
 
-# Scale: Young's standing image height, measured on gridded stills
-# (frames 195/205/290/300: helmet-top y=58..64, boot-sole y=185..190).
-STAND_PX = 128.0             # +- 4 px   (a16salute.mpg, at Young's depth)
-STAND_PX_ERR = 4.0
+# Scale: shared with claim 09 - see a16_scale.py for the full derivation and
+# for the measurement code that produces STAND_PX from the frames themselves.
+# NOTHING in this file may redefine it.
+STAND_PX = a16_scale.STAND_PX          # 129.0 +- 5.0 px, measured (see below)
+STAND_PX_ERR = a16_scale.STAND_PX_ERR
+STAND_M = a16_scale.STAND_M            # 1.80 +- 0.10 m
+STAND_M_ERR = a16_scale.STAND_M_ERR
+PX_PER_M = a16_scale.PX_PER_M
+SCALE_RELERR = a16_scale.SCALE_RELERR
+
+# The .mov is a separate digitization at a different raster (256x192); it
+# carries its own independently measured pixel height but the *same* metre
+# figure, so it is a genuine cross-check of the pixel measurement.
 STAND_PX_MOV = 105.0         # +- 4 px   (a16v.1202502.mov, frames 735/790)
 STAND_PX_MOV_ERR = 4.0
-# John Young 1.75 m (NASA bio) + EVA helmet/boots ~ +0.11 m upright,
-# minus the characteristic relaxed-knee A7LB stance ~ -3%:
-STAND_M = 1.80               # +- 0.10 m
-STAND_M_ERR = 0.10
-
-PX_PER_M = STAND_PX / STAND_M
 PX_PER_M_MOV = STAND_PX_MOV / STAND_M
-SCALE_RELERR = np.sqrt((STAND_PX_ERR / STAND_PX) ** 2 + (STAND_M_ERR / STAND_M) ** 2)
 SCALE_RELERR_MOV = np.sqrt((STAND_PX_MOV_ERR / STAND_PX_MOV) ** 2 + (STAND_M_ERR / STAND_M) ** 2)
 
 CLIPS = {
@@ -79,23 +84,63 @@ CLIPS = {
 # Step 0/1 - fetch + decode
 # ----------------------------------------------------------------------------
 def fetch():
+    """Download to a .part file with a timeout, then rename atomically.
+
+    An interrupted download must never be left where the existence check can
+    mistake it for a complete file (same pattern as
+    claims/20-foreign-orbiters/fetch_dem.py).
+    """
     for name, url in CLIPS.items():
         path = os.path.join(DATA, name)
-        if not os.path.exists(path):
-            print(f"[fetch] {url}")
-            urllib.request.urlretrieve(url, path)
-        else:
-            print(f"[fetch] cached: {name}")
+        if os.path.exists(path) and os.path.getsize(path) > 0:
+            print(f"[fetch] cached: {name} ({os.path.getsize(path)} bytes)")
+            continue
+        tmp = path + ".part"
+        print(f"[fetch] {url}")
+        try:
+            with urllib.request.urlopen(url, timeout=120) as r, \
+                    open(tmp, "wb") as f:
+                declared = r.headers.get("content-length")
+                n = 0
+                while True:
+                    chunk = r.read(1 << 20)
+                    if not chunk:
+                        break
+                    f.write(chunk)
+                    n += len(chunk)
+            if declared is not None and n != int(declared):
+                raise RuntimeError(f"{name}: got {n} bytes, "
+                                   f"Content-Length said {declared}")
+        except BaseException:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+            raise
+        os.replace(tmp, path)
+        print(f"[fetch] wrote {name} ({n} bytes)")
+
+
+def _cache_key(*parts):
+    return hashlib.sha1("|".join(map(str, parts)).encode()).hexdigest()[:16]
 
 
 def decode(name, cache):
+    """Decode to frames, cached.  The cache is keyed on the source file's
+    identity (size), so a re-fetched or replaced clip invalidates it."""
+    src = os.path.join(DATA, name)
+    key = _cache_key(name, os.path.getsize(src))
     path = os.path.join(DATA, cache)
-    if os.path.exists(path):
-        return np.load(path)
-    rdr = imageio.get_reader(os.path.join(DATA, name), "ffmpeg")
+    keyfile = path + ".key"
+    if os.path.exists(path) and os.path.exists(keyfile):
+        with open(keyfile) as fh:
+            if fh.read().strip() == key:
+                return np.load(path)
+        print(f"[decode] {cache}: source changed, re-decoding")
+    rdr = imageio.get_reader(src, "ffmpeg")
     fr = np.array([f for f in rdr])
     rdr.close()
     np.save(path, fr)
+    with open(keyfile, "w") as fh:
+        fh.write(key)
     return fr
 
 
@@ -160,46 +205,65 @@ def track_updating(gray, cx, cy, tw, th, t0, t1, search=25):
     return xs, ys
 
 
+# precise fixed-template tracks: template at each jump's apex frame.
+# feature boxes chosen on gridded apex frames (see README).
+# (tref, cx, cy, tw, th, t0, t1)
+JOBS = {
+    "j1_upper":  (250, 94, 57, 64, 78, 200, 300),
+    "j1_helmet": (250, 95, 33, 50, 30, 200, 300),
+    "j1_plss":   (250, 90, 70, 56, 48, 200, 300),
+    "j2_upper":  (348, 96, 59, 64, 78, 300, 400),
+    "j2_helmet": (348, 97, 35, 50, 30, 300, 400),
+    "j2_plss":   (348, 92, 72, 56, 48, 300, 400),
+    # static ground patches (fixed template, camera-jitter reference)
+    "s_rock1":   (250, 200, 186, 40, 24, 200, 400),
+    "s_rock2":   (250, 310, 205, 40, 24, 200, 400),
+    "s_rock3":   (250, 165, 170, 44, 20, 200, 400),
+    "s_rock4":   (250, 255, 215, 40, 20, 200, 400),
+}
+JOBS_MOV = {
+    # mov cross-check tracks (apexes found by coarse scan: ~711 and ~757)
+    "m1_upper": (711, 64, 62, 40, 56, 680, 740),
+    "m2_upper": (757, 66, 63, 40, 56, 735, 785),
+    "m_rock1":  (711, 170, 150, 36, 20, 680, 785),
+    "m_rock2":  (711, 210, 170, 36, 20, 680, 785),
+}
+CTX_JOB = (75, 80, 40, 50)          # context track template box
+SEARCH_STATIC, SEARCH_ASTRO, SEARCH_MOV = 12, 30, 25
+
+
 def run_tracking(gray, gray_mov):
+    """Template tracking, cached.  The cache is keyed on a hash of every
+    parameter that changes the answer (job boxes, search radii, upsampling,
+    and the decoded frame shapes) - edit a template box and the cache is
+    invalidated instead of silently returning the old tracks."""
+    key = _cache_key(json.dumps(JOBS, sort_keys=True),
+                     json.dumps(JOBS_MOV, sort_keys=True),
+                     CTX_JOB, SEARCH_STATIC, SEARCH_ASTRO, SEARCH_MOV, UP,
+                     gray.shape, gray_mov.shape)
     cache = os.path.join(DATA, "tracks_cache.npz")
     if os.path.exists(cache):
-        return dict(np.load(cache))
+        z = dict(np.load(cache))
+        if str(z.get("_key", "")) == key:
+            print(f"[track] cached ({key})")
+            z.pop("_key", None)
+            return z
+        print("[track] parameters changed - recomputing tracks")
     out = {}
     # context track over whole salute clip
-    cxs, cys = track_updating(gray, 75, 80, 40, 50, 0, len(gray) - 1)
+    cxs, cys = track_updating(gray, *CTX_JOB, 0, len(gray) - 1)
     out["ctx_x"], out["ctx_y"] = cxs, cys
-    # precise fixed-template tracks: template at each jump's apex frame.
-    # feature boxes chosen on gridded apex frames (see README).
-    jobs = {
-        "j1_upper":  (250, 94, 57, 64, 78, 200, 300),
-        "j1_helmet": (250, 95, 33, 50, 30, 200, 300),
-        "j1_plss":   (250, 90, 70, 56, 48, 200, 300),
-        "j2_upper":  (348, 96, 59, 64, 78, 300, 400),
-        "j2_helmet": (348, 97, 35, 50, 30, 300, 400),
-        "j2_plss":   (348, 92, 72, 56, 48, 300, 400),
-        # static ground patches (fixed template, camera-jitter reference)
-        "s_rock1":   (250, 200, 186, 40, 24, 200, 400),
-        "s_rock2":   (250, 310, 205, 40, 24, 200, 400),
-        "s_rock3":   (250, 165, 170, 44, 20, 200, 400),
-        "s_rock4":   (250, 255, 215, 40, 20, 200, 400),
-    }
-    for k, (tref, cx, cy, tw, th, t0, t1) in jobs.items():
-        search = 12 if k.startswith("s_") else 30
+    for k, (tref, cx, cy, tw, th, t0, t1) in JOBS.items():
+        search = SEARCH_STATIC if k.startswith("s_") else SEARCH_ASTRO
         xs, ys, sc = track_fixed(gray, tref, cx, cy, tw, th, t0, t1, search)
         out[k + "_x"], out[k + "_y"], out[k + "_s"] = xs, ys, sc
         print(f"[track] {k}: min NCC {np.nanmin(sc):.3f}")
-    # mov cross-check tracks (apexes found by coarse scan: ~711 and ~757)
-    for k, (tref, cx, cy, tw, th, t0, t1) in {
-        "m1_upper": (711, 64, 62, 40, 56, 680, 740),
-        "m2_upper": (757, 66, 63, 40, 56, 735, 785),
-        "m_rock1":  (711, 170, 150, 36, 20, 680, 785),
-        "m_rock2":  (711, 210, 170, 36, 20, 680, 785),
-    }.items():
-        search = 12 if "rock" in k else 25
+    for k, (tref, cx, cy, tw, th, t0, t1) in JOBS_MOV.items():
+        search = SEARCH_STATIC if "rock" in k else SEARCH_MOV
         xs, ys, sc = track_fixed(gray_mov, tref, cx, cy, tw, th, t0, t1, search)
         out[k + "_x"], out[k + "_y"], out[k + "_s"] = xs, ys, sc
         print(f"[track] {k}: min NCC {np.nanmin(sc):.3f}")
-    np.savez(cache, **out)
+    np.savez(cache, _key=key, **out)
     return out
 
 
@@ -308,27 +372,50 @@ def changepoint_test(ts, yy, guard=4):
     return best[0], best[1], p_adj, best[3], best[4]
 
 
-def changepoint_sensitivity(ts, yy, res, B=200):
-    """Min tension-impulse Delta-v (m/s) detectable by the changepoint test:
-    inject a velocity kink at mid-flight into noise-matched synthetic
-    ballistic data and find the 50% detection threshold."""
+DV_GRID = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0,
+           12.0, 16.0, 20.0, 24.0, 32.0]
+
+
+def changepoint_sensitivity(ts, yy, res, B=400, block=4, powers=(0.5, 0.95)):
+    """Tension-impulse Delta-v (px/s) detectable by the changepoint test at
+    each requested statistical power.
+
+    The synthetic data are built from a *moving-block bootstrap of the real
+    post-cadence residuals*, not from i.i.d. Gaussian noise: those residuals
+    fail Ljung-Box whiteness (p < 0.01), and autocorrelated noise mimics the
+    hinge basis, so a white-noise calibration would understate the floor.
+    Returns {power: dv_px}; a power that is not reached on DV_GRID gets inf.
+    """
     c, _ = fit_quad(ts, yy)
     clean = np.polyval(c, ts)
-    sigma = res.std()
-    n = len(ts)
+    n = len(res)
+    nblk = int(np.ceil(n / block))
     tc = ts[n // 2]
+    hinge = np.where(ts > tc, ts - tc, 0.0)
+
     def detect_rate(dv_px):
         hits = 0
         for _ in range(B):
-            noise = RNG.normal(0, sigma, n)
-            yk = clean + noise + dv_px * np.where(ts > tc, ts - tc, 0.0)
-            p = changepoint_test(ts, yk)[2]
+            starts = RNG.integers(0, n - block + 1, nblk)
+            noise = np.concatenate([res[s:s + block] for s in starts])[:n]
+            p = changepoint_test(ts, clean + noise + dv_px * hinge)[2]
             hits += p < 0.05
         return hits / B
-    for dv in [0.5, 1, 2, 3, 4, 6, 8, 12, 16, 24, 32]:
-        if detect_rate(dv) >= 0.5:
-            return dv
-    return np.inf
+
+    out = {p: np.inf for p in powers}
+    need = sorted(powers)
+    # dv = 0 is the empirical false-alarm rate of the test against this
+    # (autocorrelated) noise; with white noise it would be ~0.05.
+    curve = {0.0: detect_rate(0.0)}
+    for dv in DV_GRID:
+        r = detect_rate(dv)
+        curve[dv] = r
+        for p in need:
+            if np.isinf(out[p]) and r >= p:
+                out[p] = dv
+        if all(np.isfinite(v) for v in out.values()):
+            break
+    return out, curve
 
 
 def symmetry(ts, yy, levels=(0.25, 0.5, 0.75)):
@@ -499,7 +586,33 @@ def main():
     print(f"[stabilize] camera jitter rms: {np.nanstd(sy[200:400]):.2f} px (y), "
           f"{np.nanstd(sx[200:400]):.2f} px (x)")
 
+    # --- metric scale: re-measure it from the frames (shared with claim 09) --
+    meas = a16_scale.measure_standing_px(lambda t: gray[t])
+    sens = a16_scale.threshold_sensitivity(lambda t: gray[t])
+    print(f"[scale] Young standing extent measured on {meas['n']} frames: "
+          f"{meas['mean']:.1f} +- {meas['sd']:.1f} px (sd)   "
+          f"sole-threshold sweep {sens}")
+    if abs(meas["mean"] - STAND_PX) > 1.0:
+        print(f"[scale] WARNING: a16_scale.STAND_PX = {STAND_PX} px disagrees "
+              f"with the measurement ({meas['mean']:.1f} px) by more than 1 px")
+    print(f"[scale] adopted {STAND_PX} +- {STAND_PX_ERR} px / "
+          f"{STAND_M} +- {STAND_M_ERR} m = {PX_PER_M:.2f} px/m "
+          f"(+-{100*SCALE_RELERR:.1f}% systematic)")
+
     results = {"claim": 10, "title": "Astronauts on wires"}
+    results["scale"] = {
+        "shared_with": "claims/09-gravity (a16_scale.py)",
+        "standing_px_measured_mean": round(meas["mean"], 2),
+        "standing_px_measured_sd": round(meas["sd"], 2),
+        "standing_px_measured_n_frames": meas["n"],
+        "standing_px_sole_threshold_sweep": sens,
+        "standing_px_adopted": STAND_PX,
+        "standing_px_err": STAND_PX_ERR,
+        "standing_m_adopted": STAND_M,
+        "standing_m_err": STAND_M_ERR,
+        "px_per_m": round(PX_PER_M, 2),
+        "scale_rel_err": round(float(SCALE_RELERR), 4),
+    }
     J = {}
 
     for j in ["j1", "j2"]:
@@ -535,8 +648,9 @@ def main():
 
         # changepoint (tension event) test on cadence-corrected data
         tc, F, p_cp, dvh_px, dah_px = changepoint_test(ts, yy)
-        dv_px = changepoint_sensitivity(ts, yy, res1)
-        dv_ms = dv_px / PX_PER_M
+        dv_floor, dv_curve = changepoint_sensitivity(ts, yy, res1)
+        dv50_ms = dv_floor[0.5] / PX_PER_M
+        dv95_ms = dv_floor[0.95] / PX_PER_M
 
         # rigid-body coherence: a wire pulls the whole body, so any real
         # tension event must appear in the helmet and the backpack (PLSS)
@@ -601,7 +715,13 @@ def main():
             "changepoint_t_helmet_vs_plss_s": [round(float(cp_feat["helmet"][0]), 3),
                                                round(float(cp_feat["plss"][0]), 3)],
             "helmet_plss_residual_corr": round(coh, 3),
-            "min_detectable_tension_impulse_ms": round(float(dv_ms), 3),
+            "tension_impulse_floor_50pct_ms": round(float(dv50_ms), 3),
+            "tension_impulse_floor_95pct_ms": round(float(dv95_ms), 3),
+            "changepoint_false_alarm_rate_block_bootstrap": round(
+                float(dv_curve[0.0]), 3),
+            "tension_impulse_power_curve_cms": {
+                str(round(k / PX_PER_M * 100, 1)): v
+                for k, v in dv_curve.items()},
             "lateral_accel_ms2": round(float(ax_px / PX_PER_M), 3),
             "lateral_accel_err": round(float(sig_ax / PX_PER_M), 3),
             "jerk_ms3": round(float(jerk), 3),
@@ -617,7 +737,8 @@ def main():
         print(f"[{j}] changepoint p={p_cp:.3f} best dv={dvh_px/PX_PER_M*100:.1f} cm/s "
               f"(helmet {cp_feat['helmet'][2]*100:+.1f} @ t={cp_feat['helmet'][0]:.2f}s, "
               f"plss {cp_feat['plss'][2]*100:+.1f} @ t={cp_feat['plss'][0]:.2f}s, "
-              f"resid corr {coh:+.2f}); floor {dv_ms*100:.1f} cm/s")
+              f"resid corr {coh:+.2f}); floor {dv50_ms*100:.1f} cm/s @50% power, "
+              f"{dv95_ms*100:.1f} cm/s @95%")
         print(f"[{j}] jerk {jerk:.2f}±{jerk_sig:.2f} m/s³;  "
               f"a_lat {ax_px/PX_PER_M:.3f}±{sig_ax/PX_PER_M:.3f} m/s²")
         for lev, r, f_, asym in sym_lv:
@@ -684,13 +805,15 @@ def main():
     e1 = np.hypot(results["j1"]["g_stat_err"], results["j1"]["g_scale_sys_err"])
     asyms = [abs(v) for j in ["j1", "j2"]
              for v in results[j]["rise_fall_asymmetry_pct"].values()]
+    dv95 = max(results["j1"]["tension_impulse_floor_95pct_ms"],
+               results["j2"]["tension_impulse_floor_95pct_ms"])
     results["verdict"] = "NO WIRES — free ballistic flight at lunar gravity"
     results["headline"] = (
         f"Both jumps fit constant-acceleration free fall at g = {g1:.2f} and "
         f"{g2:.2f} ± {e1:.2f} m/s² (lunar g = 1.62) with ~2 mm residuals; no "
-        f"rigid-body tension event above the "
-        f"{results['j1']['min_detectable_tension_impulse_ms']*100:.0f} cm/s "
-        f"detection floor (what little residual structure exists moves helmet "
+        f"rigid-body tension event, against a changepoint test that would "
+        f"catch a {dv95*100:.0f} cm/s velocity impulse 95 % of the time "
+        f"(what little residual structure exists moves helmet "
         f"and backpack oppositely — limb motion, not a cable), rise/fall "
         f"symmetric to a few %, and no line above the helmet down to a "
         f"~{results['wire']['min_detectable_dull_wire_mm']:.1f} mm dull-wire "

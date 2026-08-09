@@ -1,17 +1,36 @@
 {
   "claim": 10,
   "title": "Astronauts on wires",
+  "scale": {
+    "shared_with": "claims/09-gravity (a16_scale.py)",
+    "standing_px_measured_mean": 128.97,
+    "standing_px_measured_sd": 3.5,
+    "standing_px_measured_n_frames": 62,
+    "standing_px_sole_threshold_sweep": {
+      "0.5": 131.63,
+      "0.525": 130.31,
+      "0.55": 128.97,
+      "0.575": 126.1,
+      "0.6": 123.49
+    },
+    "standing_px_adopted": 129.0,
+    "standing_px_err": 5.0,
+    "standing_m_adopted": 1.8,
+    "standing_m_err": 0.1,
+    "px_per_m": 71.67,
+    "scale_rel_err": 0.0677
+  },
   "j1": {
     "flight_frames": [
       237,
       276
     ],
     "T_air_s": 1.302,
-    "g_fit_ms2": 1.69,
+    "g_fit_ms2": 1.677,
     "g_stat_err": 0.007,
-    "g_scale_sys_err": 0.108,
-    "apex_height_m": 0.35,
-    "g_from_8h_T2": 1.686,
+    "g_scale_sys_err": 0.114,
+    "apex_height_m": 0.347,
+    "g_from_8h_T2": 1.673,
     "resid_rms_px_plain": 0.575,
     "resid_rms_px_cadence": 0.145,
     "resid_rms_mm": 2.0,
@@ -25,19 +44,33 @@
       14.0
     ],
     "changepoint_p_bonferroni": 0.002,
-    "changepoint_best_dv_cms": -5.84,
-    "changepoint_dv_cms_helmet": -9.16,
-    "changepoint_dv_cms_plss": 8.85,
+    "changepoint_best_dv_cms": -5.8,
+    "changepoint_dv_cms_helmet": -9.09,
+    "changepoint_dv_cms_plss": 8.78,
     "changepoint_t_helmet_vs_plss_s": [
       -0.322,
       -0.069
     ],
     "helmet_plss_residual_corr": -0.212,
-    "min_detectable_tension_impulse_ms": 0.056,
+    "tension_impulse_floor_50pct_ms": 0.035,
+    "tension_impulse_floor_95pct_ms": 0.084,
+    "changepoint_false_alarm_rate_block_bootstrap": 0.24,
+    "tension_impulse_power_curve_cms": {
+      "0.0": 0.24,
+      "0.7": 0.24,
+      "1.4": 0.2775,
+      "2.1": 0.315,
+      "2.8": 0.4325,
+      "3.5": 0.535,
+      "4.2": 0.5675,
+      "5.6": 0.8025,
+      "7.0": 0.9375,
+      "8.4": 0.9825
+    },
     "lateral_accel_ms2": 0.05,
     "lateral_accel_err": 0.009,
-    "jerk_ms3": -0.114,
-    "jerk_err": 0.058,
+    "jerk_ms3": -0.113,
+    "jerk_err": 0.056,
     "rise_fall_asymmetry_pct": {
       "25%": -3.7,
       "50%": -3.8,
@@ -51,11 +84,11 @@
       366
     ],
     "T_air_s": 1.137,
-    "g_fit_ms2": 1.68,
+    "g_fit_ms2": 1.667,
     "g_stat_err": 0.01,
-    "g_scale_sys_err": 0.107,
-    "apex_height_m": 0.257,
-    "g_from_8h_T2": 1.689,
+    "g_scale_sys_err": 0.113,
+    "apex_height_m": 0.255,
+    "g_from_8h_T2": 1.676,
     "resid_rms_px_plain": 0.538,
     "resid_rms_px_cadence": 0.165,
     "resid_rms_mm": 2.3,
@@ -69,19 +102,34 @@
       14.4
     ],
     "changepoint_p_bonferroni": 0.02,
-    "changepoint_best_dv_cms": 5.68,
-    "changepoint_dv_cms_helmet": -4.92,
-    "changepoint_dv_cms_plss": 13.07,
+    "changepoint_best_dv_cms": 5.64,
+    "changepoint_dv_cms_helmet": -4.88,
+    "changepoint_dv_cms_plss": 12.97,
     "changepoint_t_helmet_vs_plss_s": [
       0.181,
       -0.072
     ],
     "helmet_plss_residual_corr": 0.209,
-    "min_detectable_tension_impulse_ms": 0.084,
-    "lateral_accel_ms2": 0.092,
+    "tension_impulse_floor_50pct_ms": 0.056,
+    "tension_impulse_floor_95pct_ms": 0.112,
+    "changepoint_false_alarm_rate_block_bootstrap": 0.133,
+    "tension_impulse_power_curve_cms": {
+      "0.0": 0.1325,
+      "0.7": 0.1575,
+      "1.4": 0.17,
+      "2.1": 0.2425,
+      "2.8": 0.3075,
+      "3.5": 0.365,
+      "4.2": 0.465,
+      "5.6": 0.6,
+      "7.0": 0.7625,
+      "8.4": 0.9225,
+      "11.2": 0.9925
+    },
+    "lateral_accel_ms2": 0.091,
     "lateral_accel_err": 0.012,
-    "jerk_ms3": 0.172,
-    "jerk_err": 0.095,
+    "jerk_ms3": 0.171,
+    "jerk_err": 0.097,
     "rise_fall_asymmetry_pct": {
       "25%": -1.0,
       "50%": -1.9,
@@ -118,9 +166,9 @@
     "assumed_line_MTF": 0.5,
     "min_detectable_sunlit_wire_mm": 0.16,
     "min_detectable_dull_wire_mm": 0.82,
-    "mm_per_px_at_astronaut": 14.1
+    "mm_per_px_at_astronaut": 14.0
   },
   "verdict": "NO WIRES \u2014 free ballistic flight at lunar gravity",
-  "headline": "Both jumps fit constant-acceleration free fall at g = 1.69 and 1.68 \u00b1 0.11 m/s\u00b2 (lunar g = 1.62) with ~2 mm residuals; no rigid-body tension event above the 6 cm/s detection floor (what little residual structure exists moves helmet and backpack oppositely \u2014 limb motion, not a cable), rise/fall symmetric to a few %, and no line above the helmet down to a ~0.8 mm dull-wire visibility bound.",
+  "headline": "Both jumps fit constant-acceleration free fall at g = 1.68 and 1.67 \u00b1 0.11 m/s\u00b2 (lunar g = 1.62) with ~2 mm residuals; no rigid-body tension event, against a changepoint test that would catch a 11 cm/s velocity impulse 95 % of the time (what little residual structure exists moves helmet and backpack oppositely \u2014 limb motion, not a cable), rise/fall symmetric to a few %, and no line above the helmet down to a ~0.8 mm dull-wire visibility bound.",
   "impressive": "The fit residuals exposed the video's own history: a 5-frame periodic timing pattern, identical in both jumps to ~1 ms, showing the clip passed through a 24 fps film-transfer stage with 2:3 pulldown \u2014 recovered blind from the jump dynamics. Correcting it collapses the residuals four-fold to ~2 mm, and what remains is incoherent between helmet and backpack (limb articulation, not any force on the body)."
 }
