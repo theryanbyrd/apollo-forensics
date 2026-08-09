@@ -19,14 +19,36 @@ def ffmpeg_bin():
     return imageio_ffmpeg.get_ffmpeg_exe()
 
 
+def wav_path_for(mp3_path, fs=FS):
+    """Path of the cached decode of `mp3_path` at `fs`."""
+    return os.path.splitext(mp3_path)[0] + f"_{fs}.wav"
+
+
+def ensure_wav(mp3_path, fs=FS):
+    """Decode mp3 -> cached mono WAV at fs; return the wav path.
+
+    The decode goes to a temporary file that is renamed into place only once
+    ffmpeg exits cleanly, so an interrupted decode can never leave a truncated
+    WAV that the next run would silently reuse as 'cached'.
+    """
+    wav = wav_path_for(mp3_path, fs)
+    if not os.path.exists(wav):
+        tmp = wav + ".part.wav"
+        try:
+            subprocess.check_call(
+                [ffmpeg_bin(), "-y", "-loglevel", "error", "-i", mp3_path,
+                 "-ac", "1", "-ar", str(fs), tmp])
+        except BaseException:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+            raise
+        os.replace(tmp, wav)
+    return wav
+
+
 def decode(mp3_path, fs=FS):
     """Decode an mp3 to cached mono WAV at fs; return (audio float32, fs)."""
-    wav_path = os.path.splitext(mp3_path)[0] + f"_{fs}.wav"
-    if not os.path.exists(wav_path):
-        subprocess.check_call(
-            [ffmpeg_bin(), "-y", "-loglevel", "error", "-i", mp3_path,
-             "-ac", "1", "-ar", str(fs), wav_path])
-    x, got_fs = sf.read(wav_path, dtype="float32")
+    x, got_fs = sf.read(ensure_wav(mp3_path, fs), dtype="float32")
     assert got_fs == fs
     return x, fs
 

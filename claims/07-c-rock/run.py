@@ -31,6 +31,7 @@ import json
 import os
 import sys
 import urllib.request
+import zlib
 
 import cv2
 import numpy as np
@@ -38,8 +39,11 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Rectangle
+from PIL import Image, ImageFile
 from skimage.exposure import match_histograms
 from skimage.metrics import structural_similarity
+
+ImageFile.LOAD_TRUNCATED_IMAGES = False   # a short JPEG must raise, not gray-fill
 
 os.environ.setdefault("OPENCV_IO_MAX_IMAGE_PIXELS", "400000000")
 
@@ -123,15 +127,131 @@ REF_BOX = (800, 2600, 1600, 3300)     # rock ROI in reference coords
 UM_PER_REFPX = 55_000 / 4175.0        # microns of film per reference pixel
 
 
+# ---------------------------------------------------------------------------
+# Download integrity.
+#
+# Every measurement below is made on a file pulled off the network, so a
+# half-finished download must never be left sitting at the final path where the
+# next run would treat it as cached.  A truncated PNG at least fails loudly
+# (cv2.imread returns None), but libjpeg decodes a truncated JPEG into a
+# partially gray-filled image and reports success: if the truncation landed
+# below the rock ROI, the C-region contrast/SSIM numbers would be computed on
+# corrupt pixels with nothing to show that anything went wrong.
+#
+# So: stream to a .part file, require the byte count to match the server's
+# Content-Length, prove the file is structurally complete, and only then rename
+# it into place.  Completeness proof per format:
+#   PNG   walk the chunk stream to IEND verifying every chunk CRC (exact: this
+#         catches truncation and any corrupted byte, and costs no decode)
+#   JPEG  require an EOI marker at the end of the file, then a strict Pillow
+#         decode (Pillow raises on a short scan; OpenCV does not)
+# ---------------------------------------------------------------------------
+PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
+DL_TIMEOUT = 120          # seconds with no data before a transfer is abandoned
+DL_CHUNK = 1 << 20
+JPEG_TRAILER_SLACK = 4096  # bytes of junk tolerated after EOI (see below)
+
+
+def _verify_png(path):
+    with open(path, "rb") as f:
+        if f.read(8) != PNG_MAGIC:
+            return False, "bad PNG signature"
+        while True:
+            head = f.read(8)
+            if len(head) < 8:
+                return False, "truncated: incomplete chunk header"
+            length = int.from_bytes(head[:4], "big")
+            ctype = head[4:8]
+            name = ctype.decode("latin1")
+            crc, left = zlib.crc32(ctype), length
+            while left:
+                b = f.read(min(DL_CHUNK, left))
+                if not b:
+                    return False, f"truncated inside {name} chunk"
+                crc = zlib.crc32(b, crc)
+                left -= len(b)
+            stored = f.read(4)
+            if len(stored) < 4:
+                return False, f"truncated: missing {name} CRC"
+            if crc != int.from_bytes(stored, "big"):
+                return False, f"corrupt: CRC mismatch in {name} chunk"
+            if ctype == b"IEND":
+                return True, "complete PNG (every chunk CRC verified)"
+
+
+def _verify_jpeg(path):
+    size = os.path.getsize(path)
+    tail_len = min(size, 1 << 16)
+    with open(path, "rb") as f:
+        f.seek(size - tail_len)
+        tail = f.read()
+    # EOI cannot occur inside entropy-coded data (0xFF is byte-stuffed there),
+    # so an EOI near the end of the file proves the file reaches its true end.
+    # Trailing junk is tolerated: the C-bearing crop as served by Wikimedia
+    # carries 258 bytes of HTML that its original host appended after the EOI.
+    eoi = tail.rfind(b"\xff\xd9")
+    if eoi < 0:
+        return False, "truncated: no JPEG EOI marker at end of file"
+    trailing = tail_len - eoi - 2
+    if trailing > JPEG_TRAILER_SLACK:
+        return False, f"EOI marker {trailing} bytes from the end of the file"
+    try:
+        with Image.open(path) as im:
+            im.load()                      # strict: raises on a short scan
+    except Exception as e:                 # noqa: BLE001 - any decode failure
+        return False, f"decode failed: {e}"
+    return True, "complete JPEG (EOI present, decodes cleanly)"
+
+
+def verify_image(path):
+    """(ok, reason) -- is `path` a complete, decodable image?"""
+    if not os.path.exists(path):
+        return False, "file missing"
+    if os.path.getsize(path) == 0:
+        return False, "empty file"
+    with open(path, "rb") as f:
+        magic = f.read(8)
+    if magic == PNG_MAGIC:
+        return _verify_png(path)
+    if magic[:2] == b"\xff\xd8":
+        return _verify_jpeg(path)
+    return False, "not a PNG or JPEG (server error page?)"
+
+
 def fetch(key, force=False):
     s = SOURCES[key]
     path = os.path.join(DATA, s["file"])
     if os.path.exists(path) and not force:
-        return path
+        ok, why = verify_image(path)
+        if ok:
+            return path
+        print(f"{key}: cached {s['file']} rejected ({why}) -> re-downloading")
+    tmp = path + ".part"
     print(f"downloading {key} from {s['url']}")
     req = urllib.request.Request(s["url"], headers=UA)
-    with urllib.request.urlopen(req, timeout=300) as r, open(path, "wb") as f:
-        f.write(r.read())
+    n = 0
+    try:
+        with urllib.request.urlopen(req, timeout=DL_TIMEOUT) as r:
+            declared = r.headers.get("Content-Length")
+            declared = int(declared) if declared and declared.isdigit() else None
+            with open(tmp, "wb") as f:
+                while True:
+                    buf = r.read(DL_CHUNK)   # a stall raises after DL_TIMEOUT
+                    if not buf:
+                        break
+                    f.write(buf)
+                    n += len(buf)
+        if declared is not None and n != declared:
+            raise IOError(f"{s['file']}: got {n} bytes, server declared {declared}")
+        ok, why = verify_image(tmp)
+        if not ok:
+            raise IOError(f"{s['file']}: download unusable ({why})")
+    except BaseException:
+        if os.path.exists(tmp):
+            os.remove(tmp)     # never leave a partial file where it could cache
+        raise
+    os.replace(tmp, path)      # atomic: the final path only ever holds a verified file
+    print(f"  {s['file']}: {n:,} bytes, {why}")
     return path
 
 
@@ -172,12 +292,17 @@ def register_all(ref, ref_roi):
     Hs, log = {}, {}
 
     full_keys = ["mttm_med", "grin", "sf2002", "jsc90s", "lpi450"]
-    if os.path.exists(os.path.join(DATA, SOURCES["mttm_full"]["file"])):
-        try:  # only use the big scan if the download is complete
-            load("mttm_full", gray=True)
-            full_keys.insert(0, "mttm_full")
-        except Exception:
-            print("mttm_full present but unreadable -> skipped")
+    full_path = os.path.join(DATA, SOURCES["mttm_full"]["file"])
+    if os.path.exists(full_path):
+        ok, why = verify_image(full_path)   # only use the big scan if it is complete
+        if not ok:
+            print(f"mttm_full present but rejected ({why}) -> skipped")
+        else:
+            try:
+                load("mttm_full", gray=True)
+                full_keys.insert(0, "mttm_full")
+            except Exception as e:
+                print(f"mttm_full present but unreadable ({e}) -> skipped")
 
     ps = 1500.0 / max(ref.shape[:2])
     ref_small = cv2.resize(ref, None, fx=ps, fy=ps, interpolation=cv2.INTER_AREA)
